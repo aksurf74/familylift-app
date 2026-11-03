@@ -1,4 +1,4 @@
-const CACHE_NAME='familylift-v3-visual';
+const CACHE_NAME='familylift-v3-1-functional';
 const APP_SHELL=['./','./index.html','./styles.css','./app.js','./manifest.json','./assets/familylift-icon-192.png','./assets/familylift-icon-512.png','./assets/familylift-apple-touch-icon.png','./assets/familylift-road-v3.webp','./assets/icons/home.svg','./assets/icons/car.svg','./assets/icons/stats.svg','./assets/icons/family.svg'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(APP_SHELL)));self.skipWaiting()});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('familylift-')&&k!==CACHE_NAME).map(k=>caches.delete(k)))));self.clients.claim()});
