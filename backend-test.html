@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <title>FamilyLift Backend Test</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 30px;
+      background: #080b12;
+      color: #f7f9fc;
+      font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+    }
+
+    h1 {
+      color: #caff4d;
+    }
+
+    .test {
+      margin: 12px 0;
+      padding: 14px;
+      border: 1px solid #243448;
+      border-radius: 12px;
+      background: #101927;
+    }
+
+    .pass {
+      border-color: #6fcf97;
+    }
+
+    .fail {
+      border-color: #ff6578;
+    }
+
+    .pending {
+      border-color: #ffb547;
+    }
+
+    small {
+      color: #9ca8b8;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>FamilyLift Backend Test B2.1</h1>
+
+<div id="client" class="test pending">
+  Supabase Client wird geprüft …
+</div>
+
+<div id="session" class="test pending">
+  Session wird geprüft …
+</div>
+
+<div id="profiles" class="test pending">
+  Anonymer Zugriff auf Profiles wird geprüft …
+</div>
+
+<div id="families" class="test pending">
+  Anonymer Zugriff auf Families wird geprüft …
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="supabase-config.js"></script>
+<script src="supabase-client.js"></script>
+
+<script>
+(async function runBackendTest() {
+
+  function result(id, success, headline, detail) {
+    const el = document.getElementById(id);
+
+    el.className = "test " + (success ? "pass" : "fail");
+
+    el.innerHTML =
+      "<strong>" +
+      (success ? "✓ " : "✕ ") +
+      headline +
+      "</strong>" +
+      (detail
+        ? "<br><small>" + detail + "</small>"
+        : "");
+  }
+
+  const db = window.familyLiftSupabase;
+
+  if (!db) {
+    result(
+      "client",
+      false,
+      "Supabase Client nicht verfügbar",
+      "Config oder Library prüfen."
+    );
+    return;
+  }
+
+  result(
+    "client",
+    true,
+    "Supabase Client initialisiert",
+    "Project URL und Publishable Key wurden verarbeitet."
+  );
+
+  /* Session prüfen */
+
+  const {
+    data: sessionData,
+    error: sessionError
+  } = await db.auth.getSession();
+
+  if (sessionError) {
+
+    result(
+      "session",
+      false,
+      "Session-Test fehlgeschlagen",
+      sessionError.message
+    );
+
+  } else if (sessionData.session) {
+
+    result(
+      "session",
+      false,
+      "Unerwartete Session vorhanden",
+      "Für B2.1 sollte noch niemand eingeloggt sein."
+    );
+
+  } else {
+
+    result(
+      "session",
+      true,
+      "Keine Session vorhanden",
+      "Korrekt für den anonymen B2.1-Test."
+    );
+
+  }
+
+  /* Profiles anonym lesen */
+
+  const {
+    data: profileData,
+    error: profileError
+  } = await db
+    .from("profiles")
+    .select("id");
+
+  if (profileError) {
+
+    result(
+      "profiles",
+      true,
+      "Profiles ohne Login blockiert",
+      profileError.message
+    );
+
+  } else {
+
+    result(
+      "profiles",
+      false,
+      "Profiles sind anonym erreichbar",
+      "Zurückgegebene Datensätze: " +
+      (profileData?.length ?? 0)
+    );
+
+  }
+
+  /* Families anonym lesen */
+
+  const {
+    data: familyData,
+    error: familyError
+  } = await db
+    .from("families")
+    .select("id");
+
+  if (familyError) {
+
+    result(
+      "families",
+      true,
+      "Families ohne Login blockiert",
+      familyError.message
+    );
+
+  } else {
+
+    result(
+      "families",
+      false,
+      "Families sind anonym erreichbar",
+      "Zurückgegebene Datensätze: " +
+      (familyData?.length ?? 0)
+    );
+
+  }
+
+})();
+</script>
+
+</body>
+</html>
