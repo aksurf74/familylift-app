@@ -1,41 +1,5 @@
-const CACHE_NAME = 'familylift-v2-glossy';
-const APP_SHELL = [
-  './',
-  './index.html',
-  './styles.css',
-  './app.js',
-  './manifest.json',
-  './assets/familylift-icon-192.png',
-  './assets/familylift-icon-512.png',
-  './assets/familylift-apple-touch-icon.png'
-];
-
-self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)));
-  self.skipWaiting();
-});
-
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(keys => Promise.all(
-      keys.filter(key => key.startsWith('familylift-') && key !== CACHE_NAME).map(key => caches.delete(key))
-    ))
-  );
-  self.clients.claim();
-});
-
-self.addEventListener('fetch', event => {
-  const requestUrl = new URL(event.request.url);
-  if (requestUrl.origin !== self.location.origin || event.request.method !== 'GET') return;
-  event.respondWith(
-    fetch(event.request)
-      .then(response => {
-        if (response && response.ok) {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
-        }
-        return response;
-      })
-      .catch(() => caches.match(event.request).then(cached => cached || caches.match('./index.html')))
-  );
-});
+const CACHE_NAME='familylift-v3-visual';
+const APP_SHELL=['./','./index.html','./styles.css','./app.js','./manifest.json','./assets/familylift-icon-192.png','./assets/familylift-icon-512.png','./assets/familylift-apple-touch-icon.png','./assets/familylift-road-v3.webp','./assets/icons/home.svg','./assets/icons/car.svg','./assets/icons/stats.svg','./assets/icons/family.svg'];
+self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(APP_SHELL)));self.skipWaiting()});
+self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('familylift-')&&k!==CACHE_NAME).map(k=>caches.delete(k)))));self.clients.claim()});
+self.addEventListener('fetch',e=>{const u=new URL(e.request.url);if(e.request.method!=='GET'||u.origin!==self.location.origin)return;e.respondWith(fetch(e.request).then(r=>{if(r&&r.ok){const copy=r.clone();caches.open(CACHE_NAME).then(c=>c.put(e.request,copy))}return r}).catch(()=>caches.match(e.request).then(c=>c||caches.match('./index.html'))))});
