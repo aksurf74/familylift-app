@@ -2,71 +2,452 @@
 <html lang="de">
 <head>
   <meta charset="utf-8">
+
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1"
   >
 
-  <title>FamilyLift Backend Test</title>
+  <title>FamilyLift Backend Test B2.2</title>
 
   <style>
+    :root {
+      --background: #080b12;
+      --panel: #101927;
+      --panel-light: #152235;
+      --text: #f7f9fc;
+      --muted: #9ca8b8;
+      --lime: #caff4d;
+      --cyan: #28dfff;
+      --green: #6fcf97;
+      --red: #ff6578;
+      --orange: #ffb547;
+      --border: #243448;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
-      padding: 30px;
-      background: #080b12;
-      color: #f7f9fc;
-      font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+      padding: 28px;
+      min-height: 100vh;
+      background:
+        radial-gradient(
+          circle at 80% 0,
+          rgba(40, 223, 255, 0.12),
+          transparent 30%
+        ),
+        linear-gradient(
+          160deg,
+          #060a11,
+          var(--background)
+        );
+      color: var(--text);
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+    }
+
+    main {
+      max-width: 760px;
+      margin: 0 auto;
     }
 
     h1 {
-      color: #caff4d;
+      margin-top: 0;
+      color: var(--lime);
+      font-size: 32px;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    .intro {
+      margin-bottom: 22px;
+      color: var(--muted);
+    }
+
+    .card {
+      margin: 14px 0;
+      padding: 18px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(24, 40, 59, 0.94),
+          rgba(12, 22, 35, 0.94)
+        );
+      box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.24),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
     }
 
     .test {
-      margin: 12px 0;
+      margin: 10px 0;
       padding: 14px;
-      border: 1px solid #243448;
-      border-radius: 12px;
-      background: #101927;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      background: var(--panel);
     }
 
     .pass {
-      border-color: #6fcf97;
+      border-color: var(--green);
     }
 
     .fail {
-      border-color: #ff6578;
+      border-color: var(--red);
     }
 
     .pending {
-      border-color: #ffb547;
+      border-color: var(--orange);
     }
 
-    small {
-      color: #9ca8b8;
+    .hidden {
+      display: none;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      outline: none;
+      background: #0b1420;
+      color: var(--text);
+      font: inherit;
+    }
+
+    input:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(40, 223, 255, 0.10);
+    }
+
+    .field {
+      margin: 14px 0;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 10px;
+      padding: 15px;
+      border: 0;
+      border-radius: 14px;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 900;
+    }
+
+    button:disabled {
+      cursor: wait;
+      opacity: 0.55;
+    }
+
+    .primary {
+      color: #071008;
+      background:
+        linear-gradient(
+          110deg,
+          #dfff72,
+          #b8ff37 55%,
+          #5ff1c1
+        );
+    }
+
+    .secondary {
+      color: var(--text);
+      background: var(--panel-light);
+      border: 1px solid var(--border);
+    }
+
+    .danger {
+      color: #ffdce1;
+      background: rgba(255, 101, 120, 0.13);
+      border: 1px solid rgba(255, 101, 120, 0.35);
+    }
+
+    .message {
+      margin-top: 14px;
+      padding: 13px;
+      border-radius: 13px;
+    }
+
+    .message-error {
+      color: #ffc3cc;
+      background: rgba(255, 101, 120, 0.12);
+      border: 1px solid rgba(255, 101, 120, 0.34);
+    }
+
+    .message-success {
+      color: #dfffe9;
+      background: rgba(111, 207, 151, 0.12);
+      border: 1px solid rgba(111, 207, 151, 0.34);
+    }
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .profile-value {
+      padding: 13px;
+      border-radius: 13px;
+      background: rgba(255, 255, 255, 0.045);
+    }
+
+    .profile-value span {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .profile-value strong {
+      font-size: 17px;
+    }
+
+    .member-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .member {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 13px;
+      border-radius: 13px;
+      background: rgba(255, 255, 255, 0.045);
+    }
+
+    .member small,
+    .test small {
+      color: var(--muted);
+    }
+
+    .member-role {
+      color: var(--cyan);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .security-note {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 560px) {
+      body {
+        padding: 18px;
+      }
+
+      h1 {
+        font-size: 27px;
+      }
+
+      .profile-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 
 <body>
 
-<h1>FamilyLift Backend Test B2.1</h1>
+<main>
 
-<div id="client" class="test pending">
-  Supabase Client wird geprüft …
-</div>
+  <h1>FamilyLift Backend Test B2.2</h1>
 
-<div id="session" class="test pending">
-  Session wird geprüft …
-</div>
+  <p class="intro">
+    Echter Login, Profilabfrage und RLS-Test mit Supabase.
+  </p>
 
-<div id="profiles" class="test pending">
-  Anonymer Zugriff auf Profiles wird geprüft …
-</div>
+  <section id="connectionCard" class="card">
 
-<div id="families" class="test pending">
-  Anonymer Zugriff auf Families wird geprüft …
-</div>
+    <h2>Verbindung</h2>
+
+    <div id="client" class="test pending">
+      Supabase Client wird geprüft …
+    </div>
+
+    <div id="session" class="test pending">
+      Session wird geprüft …
+    </div>
+
+  </section>
+
+  <section id="loginCard" class="card">
+
+    <h2>FamilyLift Login</h2>
+
+    <form id="loginForm">
+
+      <div class="field">
+        <label for="email">
+          E-Mail
+        </label>
+
+        <input
+          id="email"
+          name="email"
+          type="email"
+          autocomplete="username"
+          required
+        >
+      </div>
+
+      <div class="field">
+        <label for="password">
+          Passwort
+        </label>
+
+        <input
+          id="password"
+          name="password"
+          type="password"
+          autocomplete="current-password"
+          minlength="10"
+          required
+        >
+      </div>
+
+      <button
+        id="loginButton"
+        class="primary"
+        type="submit"
+      >
+        ANMELDEN
+      </button>
+
+    </form>
+
+    <div
+      id="loginMessage"
+      class="message hidden"
+      aria-live="polite"
+    ></div>
+
+  </section>
+
+  <section id="authenticatedTests" class="card hidden">
+
+    <h2>Authentifizierter Backend-Test</h2>
+
+    <div id="loginTest" class="test pending">
+      Login wird geprüft …
+    </div>
+
+    <div id="userTest" class="test pending">
+      Auth-Benutzer wird geprüft …
+    </div>
+
+    <div id="profileTest" class="test pending">
+      FamilyLift-Profil wird geladen …
+    </div>
+
+    <div id="familyTest" class="test pending">
+      Familie wird geladen …
+    </div>
+
+    <div id="membersTest" class="test pending">
+      Familienmitglieder werden geladen …
+    </div>
+
+    <div id="ridesTest" class="test pending">
+      Fahrtenzugriff wird geprüft …
+    </div>
+
+  </section>
+
+  <section id="profileCard" class="card hidden">
+
+    <h2>FamilyLift-Profil</h2>
+
+    <div class="profile-grid">
+
+      <div class="profile-value">
+        <span>Name</span>
+        <strong id="profileName">–</strong>
+      </div>
+
+      <div class="profile-value">
+        <span>Familie</span>
+        <strong id="familyName">–</strong>
+      </div>
+
+      <div class="profile-value">
+        <span>Fahrer</span>
+        <strong id="canDrive">–</strong>
+      </div>
+
+      <div class="profile-value">
+        <span>Admin</span>
+        <strong id="isAdmin">–</strong>
+      </div>
+
+    </div>
+
+    <h2 style="margin-top: 22px;">
+      Familienmitglieder
+    </h2>
+
+    <div id="memberList" class="member-list"></div>
+
+    <button
+      id="logoutButton"
+      class="danger"
+      type="button"
+    >
+      ABMELDEN
+    </button>
+
+  </section>
+
+  <section id="logoutTests" class="card hidden">
+
+    <h2>Logout- und RLS-Test</h2>
+
+    <div id="logoutSessionTest" class="test pending">
+      Session nach Logout wird geprüft …
+    </div>
+
+    <div id="logoutProfilesTest" class="test pending">
+      Profiles nach Logout werden geprüft …
+    </div>
+
+    <div id="logoutFamiliesTest" class="test pending">
+      Families nach Logout werden geprüft …
+    </div>
+
+  </section>
+
+  <p class="security-note">
+    Das Passwort wird ausschließlich direkt an Supabase Auth
+    übermittelt und weder angezeigt noch in dieser Testseite
+    gespeichert oder protokolliert.
+  </p>
+
+</main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -74,137 +455,582 @@
 <script src="supabase-client.js"></script>
 
 <script>
-(async function runBackendTest() {
-
-  function result(id, success, headline, detail) {
-    const el = document.getElementById(id);
-
-    el.className = "test " + (success ? "pass" : "fail");
-
-    el.innerHTML =
-      "<strong>" +
-      (success ? "✓ " : "✕ ") +
-      headline +
-      "</strong>" +
-      (detail
-        ? "<br><small>" + detail + "</small>"
-        : "");
-  }
+(function () {
 
   const db = window.familyLiftSupabase;
 
+  const loginCard =
+    document.getElementById("loginCard");
+
+  const loginForm =
+    document.getElementById("loginForm");
+
+  const loginButton =
+    document.getElementById("loginButton");
+
+  const loginMessage =
+    document.getElementById("loginMessage");
+
+  const authenticatedTests =
+    document.getElementById("authenticatedTests");
+
+  const profileCard =
+    document.getElementById("profileCard");
+
+  const logoutTests =
+    document.getElementById("logoutTests");
+
+  function setResult(
+    id,
+    success,
+    headline,
+    detail = ""
+  ) {
+    const el = document.getElementById(id);
+
+    el.className =
+      "test " + (success ? "pass" : "fail");
+
+    el.replaceChildren();
+
+    const strong =
+      document.createElement("strong");
+
+    strong.textContent =
+      (success ? "✓ " : "✕ ") + headline;
+
+    el.appendChild(strong);
+
+    if (detail) {
+      const br =
+        document.createElement("br");
+
+      const small =
+        document.createElement("small");
+
+      small.textContent = detail;
+
+      el.appendChild(br);
+      el.appendChild(small);
+    }
+  }
+
+  function showMessage(
+    type,
+    text
+  ) {
+    loginMessage.className =
+      "message " +
+      (
+        type === "success"
+          ? "message-success"
+          : "message-error"
+      );
+
+    loginMessage.textContent = text;
+  }
+
+  function clearMessage() {
+    loginMessage.className =
+      "message hidden";
+
+    loginMessage.textContent = "";
+  }
+
+  function booleanText(value) {
+    return value ? "Ja" : "Nein";
+  }
+
+  async function testAnonymousAccess() {
+
+    const {
+      data: sessionData,
+      error: sessionError
+    } = await db.auth.getSession();
+
+    if (sessionError) {
+      setResult(
+        "session",
+        false,
+        "Session-Test fehlgeschlagen",
+        sessionError.message
+      );
+      return;
+    }
+
+    if (sessionData.session) {
+      setResult(
+        "session",
+        true,
+        "Bestehende Session gefunden",
+        "Der eingeloggte Benutzer wird geladen."
+      );
+
+      await loadAuthenticatedData();
+      return;
+    }
+
+    setResult(
+      "session",
+      true,
+      "Keine Session vorhanden",
+      "Bereit für den Login-Test."
+    );
+  }
+
+  async function loadAuthenticatedData() {
+
+    authenticatedTests.classList.remove("hidden");
+    profileCard.classList.add("hidden");
+    logoutTests.classList.add("hidden");
+
+    setResult(
+      "loginTest",
+      true,
+      "Login erfolgreich",
+      "Eine aktive Supabase-Session ist vorhanden."
+    );
+
+    /*
+      Auth-Benutzer authentisch vom Auth-Server laden.
+    */
+
+    const {
+      data: userData,
+      error: userError
+    } = await db.auth.getUser();
+
+    if (
+      userError ||
+      !userData.user
+    ) {
+      setResult(
+        "userTest",
+        false,
+        "Auth-Benutzer konnte nicht geladen werden",
+        userError?.message || "Kein Benutzer vorhanden."
+      );
+      return;
+    }
+
+    const user =
+      userData.user;
+
+    setResult(
+      "userTest",
+      true,
+      "Auth-Benutzer bestätigt",
+      user.email || user.id
+    );
+
+    /*
+      Eigenes FamilyLift-Profil laden.
+    */
+
+    const {
+      data: profile,
+      error: profileError
+    } = await db
+      .from("profiles")
+      .select(
+        "id, family_id, display_name, can_drive, is_admin"
+      )
+      .eq("id", user.id)
+      .single();
+
+    if (
+      profileError ||
+      !profile
+    ) {
+      setResult(
+        "profileTest",
+        false,
+        "FamilyLift-Profil konnte nicht geladen werden",
+        profileError?.message ||
+        "Kein Profil gefunden."
+      );
+      return;
+    }
+
+    setResult(
+      "profileTest",
+      true,
+      "FamilyLift-Profil geladen",
+      profile.display_name
+    );
+
+    /*
+      Zugehörige Familie laden.
+    */
+
+    const {
+      data: family,
+      error: familyError
+    } = await db
+      .from("families")
+      .select("id, name")
+      .eq("id", profile.family_id)
+      .single();
+
+    if (
+      familyError ||
+      !family
+    ) {
+      setResult(
+        "familyTest",
+        false,
+        "Familie konnte nicht geladen werden",
+        familyError?.message ||
+        "Keine Familie gefunden."
+      );
+      return;
+    }
+
+    setResult(
+      "familyTest",
+      true,
+      "Kraus Family geladen",
+      family.name
+    );
+
+    /*
+      Alle sichtbaren Family-Profile laden.
+    */
+
+    const {
+      data: members,
+      error: membersError
+    } = await db
+      .from("profiles")
+      .select(
+        "id, display_name, can_drive, is_admin"
+      )
+      .eq("family_id", profile.family_id)
+      .order("display_name");
+
+    if (membersError) {
+      setResult(
+        "membersTest",
+        false,
+        "Familienmitglieder konnten nicht geladen werden",
+        membersError.message
+      );
+      return;
+    }
+
+    const memberCount =
+      members?.length ?? 0;
+
+    const memberNames =
+      (members || [])
+        .map(member => member.display_name)
+        .join(", ");
+
+    setResult(
+      "membersTest",
+      memberCount === 4,
+      memberCount === 4
+        ? "Vier Familienmitglieder sichtbar"
+        : "Unerwartete Anzahl Familienmitglieder",
+      memberCount +
+      " sichtbar: " +
+      memberNames
+    );
+
+    /*
+      Fahrtenzugriff prüfen.
+    */
+
+    const {
+      count: rideCount,
+      error: ridesError
+    } = await db
+      .from("rides")
+      .select(
+        "id",
+        {
+          count: "exact",
+          head: true
+        }
+      );
+
+    if (ridesError) {
+      setResult(
+        "ridesTest",
+        false,
+        "Fahrtenzugriff fehlgeschlagen",
+        ridesError.message
+      );
+      return;
+    }
+
+    setResult(
+      "ridesTest",
+      true,
+      "Fahrtenzugriff erlaubt",
+      (rideCount ?? 0) +
+      " sichtbare Fahrten."
+    );
+
+    /*
+      Profilkarte aufbauen.
+    */
+
+    document.getElementById(
+      "profileName"
+    ).textContent =
+      profile.display_name;
+
+    document.getElementById(
+      "familyName"
+    ).textContent =
+      family.name;
+
+    document.getElementById(
+      "canDrive"
+    ).textContent =
+      booleanText(profile.can_drive);
+
+    document.getElementById(
+      "isAdmin"
+    ).textContent =
+      booleanText(profile.is_admin);
+
+    const memberList =
+      document.getElementById("memberList");
+
+    memberList.replaceChildren();
+
+    for (const member of members || []) {
+
+      const row =
+        document.createElement("div");
+
+      row.className = "member";
+
+      const name =
+        document.createElement("strong");
+
+      name.textContent =
+        member.display_name;
+
+      const role =
+        document.createElement("span");
+
+      role.className = "member-role";
+
+      if (member.can_drive) {
+        role.textContent =
+          member.is_admin
+            ? "Fahrer · Admin"
+            : "Fahrer";
+      } else {
+        role.textContent =
+          "Mitfahrerin";
+      }
+
+      row.appendChild(name);
+      row.appendChild(role);
+      memberList.appendChild(row);
+    }
+
+    loginCard.classList.add("hidden");
+    profileCard.classList.remove("hidden");
+  }
+
+  async function runLogoutTest() {
+
+    const {
+      error: logoutError
+    } = await db.auth.signOut();
+
+    if (logoutError) {
+      setResult(
+        "logoutSessionTest",
+        false,
+        "Logout fehlgeschlagen",
+        logoutError.message
+      );
+      return;
+    }
+
+    authenticatedTests.classList.add("hidden");
+    profileCard.classList.add("hidden");
+    logoutTests.classList.remove("hidden");
+    loginCard.classList.remove("hidden");
+
+    loginForm.reset();
+
+    const {
+      data: sessionData,
+      error: sessionError
+    } = await db.auth.getSession();
+
+    setResult(
+      "logoutSessionTest",
+      !sessionError && !sessionData.session,
+      !sessionError && !sessionData.session
+        ? "Session nach Logout entfernt"
+        : "Session nach Logout noch vorhanden",
+      sessionError?.message || ""
+    );
+
+    const {
+      data: profileData,
+      error: profileError
+    } = await db
+      .from("profiles")
+      .select("id");
+
+    setResult(
+      "logoutProfilesTest",
+      Boolean(profileError),
+      profileError
+        ? "Profiles nach Logout blockiert"
+        : "Profiles nach Logout erreichbar",
+      profileError?.message ||
+      (
+        (profileData?.length ?? 0) +
+        " Datensätze zurückgegeben."
+      )
+    );
+
+    const {
+      data: familyData,
+      error: familyError
+    } = await db
+      .from("families")
+      .select("id");
+
+    setResult(
+      "logoutFamiliesTest",
+      Boolean(familyError),
+      familyError
+        ? "Families nach Logout blockiert"
+        : "Families nach Logout erreichbar",
+      familyError?.message ||
+      (
+        (familyData?.length ?? 0) +
+        " Datensätze zurückgegeben."
+      )
+    );
+
+    setResult(
+      "session",
+      true,
+      "Keine Session vorhanden",
+      "Logout- und RLS-Test abgeschlossen."
+    );
+  }
+
+  /*
+    Initialisierung
+  */
+
   if (!db) {
-    result(
+    setResult(
       "client",
       false,
       "Supabase Client nicht verfügbar",
-      "Config oder Library prüfen."
+      "supabase-config.js und supabase-client.js prüfen."
     );
+
+    loginButton.disabled = true;
     return;
   }
 
-  result(
+  setResult(
     "client",
     true,
     "Supabase Client initialisiert",
     "Project URL und Publishable Key wurden verarbeitet."
   );
 
-  /* Session prüfen */
+  testAnonymousAccess();
 
-  const {
-    data: sessionData,
-    error: sessionError
-  } = await db.auth.getSession();
+  /*
+    Login
+  */
 
-  if (sessionError) {
+  loginForm.addEventListener(
+    "submit",
+    async function (event) {
+      event.preventDefault();
+      clearMessage();
 
-    result(
-      "session",
-      false,
-      "Session-Test fehlgeschlagen",
-      sessionError.message
+      const email =
+        document
+          .getElementById("email")
+          .value
+          .trim();
+
+      const password =
+        document
+          .getElementById("password")
+          .value;
+
+      if (
+        !email ||
+        !password
+      ) {
+        showMessage(
+          "error",
+          "Bitte E-Mail und Passwort eingeben."
+        );
+        return;
+      }
+
+      loginButton.disabled = true;
+      loginButton.textContent =
+        "ANMELDUNG LÄUFT …";
+
+      const {
+        data,
+        error
+      } = await db.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      loginButton.disabled = false;
+      loginButton.textContent =
+        "ANMELDEN";
+
+      if (
+        error ||
+        !data.session
+      ) {
+        showMessage(
+          "error",
+          error?.message ||
+          "Login nicht möglich."
+        );
+        return;
+      }
+
+      showMessage(
+        "success",
+        "Login erfolgreich."
+      );
+
+      document.getElementById(
+        "password"
+      ).value = "";
+
+      await loadAuthenticatedData();
+    }
+  );
+
+  /*
+    Logout
+  */
+
+  document
+    .getElementById("logoutButton")
+    .addEventListener(
+      "click",
+      runLogoutTest
     );
-
-  } else if (sessionData.session) {
-
-    result(
-      "session",
-      false,
-      "Unerwartete Session vorhanden",
-      "Für B2.1 sollte noch niemand eingeloggt sein."
-    );
-
-  } else {
-
-    result(
-      "session",
-      true,
-      "Keine Session vorhanden",
-      "Korrekt für den anonymen B2.1-Test."
-    );
-
-  }
-
-  /* Profiles anonym lesen */
-
-  const {
-    data: profileData,
-    error: profileError
-  } = await db
-    .from("profiles")
-    .select("id");
-
-  if (profileError) {
-
-    result(
-      "profiles",
-      true,
-      "Profiles ohne Login blockiert",
-      profileError.message
-    );
-
-  } else {
-
-    result(
-      "profiles",
-      false,
-      "Profiles sind anonym erreichbar",
-      "Zurückgegebene Datensätze: " +
-      (profileData?.length ?? 0)
-    );
-
-  }
-
-  /* Families anonym lesen */
-
-  const {
-    data: familyData,
-    error: familyError
-  } = await db
-    .from("families")
-    .select("id");
-
-  if (familyError) {
-
-    result(
-      "families",
-      true,
-      "Families ohne Login blockiert",
-      familyError.message
-    );
-
-  } else {
-
-    result(
-      "families",
-      false,
-      "Families sind anonym erreichbar",
-      "Zurückgegebene Datensätze: " +
-      (familyData?.length ?? 0)
-    );
-
-  }
 
 })();
 </script>
