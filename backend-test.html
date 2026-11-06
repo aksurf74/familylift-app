@@ -8,7 +8,7 @@
     content="width=device-width, initial-scale=1"
   >
 
-  <title>FamilyLift Backend Test B2.2</title>
+  <title>FamilyLift Backend Test B2.4</title>
 
   <style>
     :root {
@@ -54,7 +54,7 @@
     }
 
     main {
-      max-width: 760px;
+      max-width: 820px;
       margin: 0 auto;
     }
 
@@ -65,8 +65,13 @@
     }
 
     h2 {
-      margin-top: 0;
+      margin: 0 0 14px;
       font-size: 20px;
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 17px;
     }
 
     .intro {
@@ -121,7 +126,9 @@
       font-size: 13px;
     }
 
-    input {
+    input,
+    select,
+    textarea {
       width: 100%;
       padding: 14px;
       border: 1px solid var(--border);
@@ -132,14 +139,27 @@
       font: inherit;
     }
 
-    input:focus {
+    input:focus,
+    select:focus,
+    textarea:focus {
       border-color: var(--cyan);
       box-shadow:
         0 0 0 3px rgba(40, 223, 255, 0.10);
     }
 
+    textarea {
+      min-height: 76px;
+      resize: vertical;
+    }
+
     .field {
       margin: 14px 0;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
     }
 
     button {
@@ -223,31 +243,53 @@
       font-size: 17px;
     }
 
-    .member-list {
+    .ride-list {
       display: grid;
-      gap: 8px;
-      margin-top: 12px;
+      gap: 12px;
+      margin-top: 14px;
     }
 
-    .member {
+    .ride {
+      padding: 15px;
+      border: 1px solid #2b4058;
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .ride-header {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
       gap: 12px;
-      padding: 12px 13px;
-      border-radius: 13px;
-      background: rgba(255, 255, 255, 0.045);
     }
 
-    .member small,
-    .test small {
+    .ride-route {
+      margin: 10px 0;
+      line-height: 1.5;
+    }
+
+    .ride-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .ride-meta span {
+      padding: 6px 9px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
       color: var(--muted);
+      font-size: 12px;
     }
 
-    .member-role {
-      color: var(--cyan);
-      font-size: 12px;
-      font-weight: 800;
+    .status {
+      padding: 6px 9px;
+      border-radius: 999px;
+      color: #071008;
+      background: var(--lime);
+      font-size: 11px;
+      font-weight: 900;
+      white-space: nowrap;
     }
 
     .security-note {
@@ -266,7 +308,8 @@
         font-size: 27px;
       }
 
-      .profile-grid {
+      .profile-grid,
+      .field-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -277,21 +320,21 @@
 
 <main>
 
-  <h1>FamilyLift Backend Test B2.2</h1>
+  <h1>FamilyLift Backend Test B2.4</h1>
 
   <p class="intro">
-    Echter Login, Profilabfrage, Passwort-Recovery und RLS-Test.
+    Echter Login, Profilprüfung und erste Fahrt in Supabase.
   </p>
 
   <section class="card">
 
     <h2>Verbindung</h2>
 
-    <div id="client" class="test pending">
+    <div id="clientTest" class="test pending">
       Supabase Client wird geprüft …
     </div>
 
-    <div id="session" class="test pending">
+    <div id="sessionTest" class="test pending">
       Session wird geprüft …
     </div>
 
@@ -310,7 +353,6 @@
 
         <input
           id="email"
-          name="email"
           type="email"
           autocomplete="username"
           required
@@ -324,7 +366,6 @@
 
         <input
           id="password"
-          name="password"
           type="password"
           autocomplete="current-password"
           minlength="10"
@@ -340,59 +381,7 @@
         ANMELDEN
       </button>
 
-      <button
-        id="forgotPasswordButton"
-        class="secondary"
-        type="button"
-      >
-        Passwort vergessen?
-      </button>
-
     </form>
-
-    <div
-      id="recoveryCard"
-      class="hidden"
-    >
-
-      <h2>Neues Passwort festlegen</h2>
-
-      <div class="field">
-        <label for="newPassword">
-          Neues Passwort
-        </label>
-
-        <input
-          id="newPassword"
-          type="password"
-          autocomplete="new-password"
-          minlength="10"
-          placeholder="Mindestens 10 Zeichen"
-        >
-      </div>
-
-      <div class="field">
-        <label for="newPasswordRepeat">
-          Passwort wiederholen
-        </label>
-
-        <input
-          id="newPasswordRepeat"
-          type="password"
-          autocomplete="new-password"
-          minlength="10"
-        >
-      </div>
-
-      <button
-        id="saveNewPasswordButton"
-        class="primary"
-        type="button"
-      >
-        NEUES PASSWORT SPEICHERN
-      </button>
-
-    </div>
 
     <div
       id="loginMessage"
@@ -402,45 +391,9 @@
 
   </section>
 
-  <section
-    id="authenticatedTests"
-    class="card hidden"
-  >
+  <section id="profileCard" class="card hidden">
 
-    <h2>Authentifizierter Backend-Test</h2>
-
-    <div id="loginTest" class="test pending">
-      Login wird geprüft …
-    </div>
-
-    <div id="userTest" class="test pending">
-      Auth-Benutzer wird geprüft …
-    </div>
-
-    <div id="profileTest" class="test pending">
-      FamilyLift-Profil wird geladen …
-    </div>
-
-    <div id="familyTest" class="test pending">
-      Familie wird geladen …
-    </div>
-
-    <div id="membersTest" class="test pending">
-      Familienmitglieder werden geladen …
-    </div>
-
-    <div id="ridesTest" class="test pending">
-      Fahrtenzugriff wird geprüft …
-    </div>
-
-  </section>
-
-  <section
-    id="profileCard"
-    class="card hidden"
-  >
-
-    <h2>FamilyLift-Profil</h2>
+    <h2>Angemeldetes FamilyLift-Profil</h2>
 
     <div class="profile-grid">
 
@@ -466,14 +419,198 @@
 
     </div>
 
-    <h2 style="margin-top: 22px;">
-      Familienmitglieder
-    </h2>
+  </section>
+
+  <section id="createRideCard" class="card hidden">
+
+    <h2>Erste echte Testfahrt</h2>
+
+    <div id="createRidePermission" class="test pending">
+      Berechtigung wird geprüft …
+    </div>
+
+    <form id="rideForm">
+
+      <div class="field">
+        <label for="pickupLabel">
+          Abholort
+        </label>
+
+        <input
+          id="pickupLabel"
+          type="text"
+          value="Neckartenzlingen, 72654"
+          maxlength="160"
+          required
+        >
+      </div>
+
+      <div class="field-grid">
+
+        <div class="field">
+          <label for="pickupLatitude">
+            Abholort Latitude
+          </label>
+
+          <input
+            id="pickupLatitude"
+            type="number"
+            step="any"
+            value="48.5898"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label for="pickupLongitude">
+            Abholort Longitude
+          </label>
+
+          <input
+            id="pickupLongitude"
+            type="number"
+            step="any"
+            value="9.2351"
+            required
+          >
+        </div>
+
+      </div>
+
+      <div class="field">
+        <label for="destinationLabel">
+          Ziel
+        </label>
+
+        <input
+          id="destinationLabel"
+          type="text"
+          value="Zuhause"
+          maxlength="160"
+          required
+        >
+      </div>
+
+      <div class="field-grid">
+
+        <div class="field">
+          <label for="destinationLatitude">
+            Ziel Latitude
+          </label>
+
+          <input
+            id="destinationLatitude"
+            type="number"
+            step="any"
+            value="48.5902"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label for="destinationLongitude">
+            Ziel Longitude
+          </label>
+
+          <input
+            id="destinationLongitude"
+            type="number"
+            step="any"
+            value="9.2348"
+            required
+          >
+        </div>
+
+      </div>
+
+      <div class="field-grid">
+
+        <div class="field">
+          <label for="passengerCount">
+            Personen
+          </label>
+
+          <select id="passengerCount">
+            <option value="1">1 Person</option>
+            <option value="2" selected>2 Personen</option>
+            <option value="3">3 Personen</option>
+            <option value="4">4 Personen</option>
+            <option value="5">5 Personen</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="driverId">
+            Fahrer
+          </label>
+
+          <select id="driverId" required>
+            <option value="">
+              Fahrer wird geladen …
+            </option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="field">
+        <label for="rideNote">
+          Notiz
+        </label>
+
+        <textarea
+          id="rideNote"
+          maxlength="500"
+        >B2.4 Testfahrt</textarea>
+      </div>
+
+      <button
+        id="createRideButton"
+        class="primary"
+        type="submit"
+      >
+        TESTFAHRT ANLEGEN
+      </button>
+
+    </form>
 
     <div
-      id="memberList"
-      class="member-list"
+      id="createRideMessage"
+      class="message hidden"
+      aria-live="polite"
     ></div>
+
+  </section>
+
+  <section id="ridesCard" class="card hidden">
+
+    <div class="ride-header">
+      <div>
+        <h2>Sichtbare Datenbankfahrten</h2>
+        <small>
+          RLS-gefilterte Fahrten für Kraus Family
+        </small>
+      </div>
+
+      <button
+        id="reloadRidesButton"
+        class="secondary"
+        type="button"
+        style="width: auto; margin: 0;"
+      >
+        AKTUALISIEREN
+      </button>
+    </div>
+
+    <div id="ridesTest" class="test pending">
+      Fahrten werden geladen …
+    </div>
+
+    <div id="rideList" class="ride-list"></div>
+
+  </section>
+
+  <section id="logoutCard" class="card hidden">
 
     <button
       id="logoutButton"
@@ -485,40 +622,10 @@
 
   </section>
 
-  <section
-    id="logoutTests"
-    class="card hidden"
-  >
-
-    <h2>Logout- und RLS-Test</h2>
-
-    <div
-      id="logoutSessionTest"
-      class="test pending"
-    >
-      Session nach Logout wird geprüft …
-    </div>
-
-    <div
-      id="logoutProfilesTest"
-      class="test pending"
-    >
-      Profiles nach Logout werden geprüft …
-    </div>
-
-    <div
-      id="logoutFamiliesTest"
-      class="test pending"
-    >
-      Families nach Logout werden geprüft …
-    </div>
-
-  </section>
-
   <p class="security-note">
-    Das Passwort wird ausschließlich direkt an Supabase Auth
-    übermittelt und weder angezeigt noch in dieser Testseite
-    gespeichert oder protokolliert.
+    Die Testfahrt wird dauerhaft in Supabase gespeichert.
+    Keine echten Adressen verwenden. Die angezeigten Koordinaten
+    sind ausschließlich technische Testwerte.
   </p>
 
 </main>
@@ -534,58 +641,58 @@
   const db =
     window.familyLiftSupabase;
 
+  let currentUser =
+    null;
+
+  let currentProfile =
+    null;
+
+  let currentFamily =
+    null;
+
+  let familyMembers =
+    [];
+
   const loginCard =
     document.getElementById("loginCard");
-
-  const loginForm =
-    document.getElementById("loginForm");
-
-  const loginButton =
-    document.getElementById("loginButton");
-
-  const forgotPasswordButton =
-    document.getElementById("forgotPasswordButton");
-
-  const recoveryCard =
-    document.getElementById("recoveryCard");
-
-  const newPassword =
-    document.getElementById("newPassword");
-
-  const newPasswordRepeat =
-    document.getElementById("newPasswordRepeat");
-
-  const saveNewPasswordButton =
-    document.getElementById("saveNewPasswordButton");
-
-  const loginMessage =
-    document.getElementById("loginMessage");
-
-  const authenticatedTests =
-    document.getElementById("authenticatedTests");
 
   const profileCard =
     document.getElementById("profileCard");
 
-  const logoutTests =
-    document.getElementById("logoutTests");
+  const createRideCard =
+    document.getElementById("createRideCard");
 
-  let recoveryMode = false;
+  const ridesCard =
+    document.getElementById("ridesCard");
 
-  function setResult(
+  const logoutCard =
+    document.getElementById("logoutCard");
+
+  const loginForm =
+    document.getElementById("loginForm");
+
+  const rideForm =
+    document.getElementById("rideForm");
+
+  const loginButton =
+    document.getElementById("loginButton");
+
+  const createRideButton =
+    document.getElementById("createRideButton");
+
+  function setTest(
     id,
     success,
     headline,
     detail = ""
   ) {
-    const el =
+    const element =
       document.getElementById(id);
 
-    el.className =
-      "test " +
-      (success ? "pass" : "fail");
+    element.className =
+      "test " + (success ? "pass" : "fail");
 
-    el.replaceChildren();
+    element.replaceChildren();
 
     const strong =
       document.createElement("strong");
@@ -594,10 +701,10 @@
       (success ? "✓ " : "✕ ") +
       headline;
 
-    el.appendChild(strong);
+    element.appendChild(strong);
 
     if (detail) {
-      const br =
+      const lineBreak =
         document.createElement("br");
 
       const small =
@@ -606,16 +713,20 @@
       small.textContent =
         detail;
 
-      el.appendChild(br);
-      el.appendChild(small);
+      element.appendChild(lineBreak);
+      element.appendChild(small);
     }
   }
 
-  function showMessage(
+  function setMessage(
+    id,
     type,
     text
   ) {
-    loginMessage.className =
+    const element =
+      document.getElementById(id);
+
+    element.className =
       "message " +
       (
         type === "success"
@@ -623,49 +734,81 @@
           : "message-error"
       );
 
-    loginMessage.textContent =
+    element.textContent =
       text;
   }
 
-  function clearMessage() {
-    loginMessage.className =
+  function hideMessage(id) {
+    const element =
+      document.getElementById(id);
+
+    element.className =
       "message hidden";
 
-    loginMessage.textContent =
+    element.textContent =
       "";
   }
 
-  function booleanText(value) {
+  function yesNo(value) {
     return value ? "Ja" : "Nein";
   }
 
-  function showRecoveryForm() {
-    recoveryMode = true;
-
-    loginCard.classList.remove("hidden");
-    loginForm.classList.add("hidden");
-    recoveryCard.classList.remove("hidden");
-
-    authenticatedTests.classList.add("hidden");
-    profileCard.classList.add("hidden");
-    logoutTests.classList.add("hidden");
-
-    clearMessage();
-
-    showMessage(
-      "success",
-      "Recovery-Link bestätigt. Bitte jetzt ein neues Passwort festlegen."
-    );
-
-    setResult(
-      "session",
-      true,
-      "Recovery-Session vorhanden",
-      "Neues Passwort kann gespeichert werden."
+  function profileName(profileId) {
+    return (
+      familyMembers.find(
+        member => member.id === profileId
+      )?.display_name || "Offen"
     );
   }
 
-  async function testInitialSession() {
+  function statusLabel(status) {
+    const labels = {
+      requested: "Angefragt",
+      accepted: "Bestätigt",
+      driver_on_the_way: "Unterwegs",
+      driver_arrived: "Da",
+      completed: "Erledigt",
+      cancelled: "Storniert",
+      rejected: "Abgelehnt"
+    };
+
+    return labels[status] || status;
+  }
+
+  function formatDate(value) {
+    if (!value) {
+      return "–";
+    }
+
+    return new Intl.DateTimeFormat(
+      "de-DE",
+      {
+        dateStyle: "short",
+        timeStyle: "short"
+      }
+    ).format(new Date(value));
+  }
+
+  async function initialize() {
+
+    if (!db) {
+      setTest(
+        "clientTest",
+        false,
+        "Supabase Client nicht verfügbar",
+        "supabase-config.js und supabase-client.js prüfen."
+      );
+
+      loginButton.disabled = true;
+      return;
+    }
+
+    setTest(
+      "clientTest",
+      true,
+      "Supabase Client initialisiert",
+      "Backend B2.4 ist erreichbar."
+    );
 
     const {
       data,
@@ -673,8 +816,8 @@
     } = await db.auth.getSession();
 
     if (error) {
-      setResult(
-        "session",
+      setTest(
+        "sessionTest",
         false,
         "Session-Test fehlgeschlagen",
         error.message
@@ -682,42 +825,27 @@
       return;
     }
 
-    if (recoveryMode) {
-      return;
-    }
-
     if (data.session) {
-      setResult(
-        "session",
+      setTest(
+        "sessionTest",
         true,
         "Bestehende Session gefunden",
-        "Der eingeloggte Benutzer wird geladen."
+        "Profil und Fahrten werden geladen."
       );
 
-      await loadAuthenticatedData();
+      await loadAuthenticatedState();
       return;
     }
 
-    setResult(
-      "session",
+    setTest(
+      "sessionTest",
       true,
       "Keine Session vorhanden",
-      "Bereit für Login oder Passwort-Reset."
+      "Bitte anmelden."
     );
   }
 
-  async function loadAuthenticatedData() {
-
-    authenticatedTests.classList.remove("hidden");
-    profileCard.classList.add("hidden");
-    logoutTests.classList.add("hidden");
-
-    setResult(
-      "loginTest",
-      true,
-      "Login erfolgreich",
-      "Eine aktive Supabase-Session ist vorhanden."
-    );
+  async function loadAuthenticatedState() {
 
     const {
       data: userData,
@@ -728,25 +856,18 @@
       userError ||
       !userData.user
     ) {
-      setResult(
-        "userTest",
+      setTest(
+        "sessionTest",
         false,
-        "Auth-Benutzer konnte nicht geladen werden",
+        "Auth-Benutzer nicht verfügbar",
         userError?.message ||
-        "Kein Benutzer vorhanden."
+        "Kein Benutzer gefunden."
       );
       return;
     }
 
-    const user =
+    currentUser =
       userData.user;
-
-    setResult(
-      "userTest",
-      true,
-      "Auth-Benutzer bestätigt",
-      user.email || user.id
-    );
 
     const {
       data: profile,
@@ -756,29 +877,25 @@
       .select(
         "id, family_id, display_name, can_drive, is_admin"
       )
-      .eq("id", user.id)
+      .eq("id", currentUser.id)
       .single();
 
     if (
       profileError ||
       !profile
     ) {
-      setResult(
-        "profileTest",
+      setTest(
+        "sessionTest",
         false,
-        "FamilyLift-Profil konnte nicht geladen werden",
+        "FamilyLift-Profil fehlt",
         profileError?.message ||
         "Kein Profil gefunden."
       );
       return;
     }
 
-    setResult(
-      "profileTest",
-      true,
-      "FamilyLift-Profil geladen",
-      profile.display_name
-    );
+    currentProfile =
+      profile;
 
     const {
       data: family,
@@ -793,22 +910,18 @@
       familyError ||
       !family
     ) {
-      setResult(
-        "familyTest",
+      setTest(
+        "sessionTest",
         false,
-        "Familie konnte nicht geladen werden",
+        "Familie fehlt",
         familyError?.message ||
         "Keine Familie gefunden."
       );
       return;
     }
 
-    setResult(
-      "familyTest",
-      true,
-      "Kraus Family geladen",
-      family.name
-    );
+    currentFamily =
+      family;
 
     const {
       data: members,
@@ -822,8 +935,8 @@
       .order("display_name");
 
     if (membersError) {
-      setResult(
-        "membersTest",
+      setTest(
+        "sessionTest",
         false,
         "Familienmitglieder konnten nicht geladen werden",
         membersError.message
@@ -831,521 +944,568 @@
       return;
     }
 
-    const memberCount =
-      members?.length ?? 0;
+    familyMembers =
+      members || [];
 
-    const memberNames =
-      (members || [])
-        .map(
-          member =>
-            member.display_name
-        )
-        .join(", ");
+    renderProfile();
+    renderDriverOptions();
 
-    setResult(
-      "membersTest",
-      memberCount === 4,
-      memberCount === 4
-        ? "Vier Familienmitglieder sichtbar"
-        : "Unerwartete Anzahl Familienmitglieder",
-      memberCount +
-      " sichtbar: " +
-      memberNames
-    );
+    loginCard.classList.add("hidden");
+    profileCard.classList.remove("hidden");
+    createRideCard.classList.remove("hidden");
+    ridesCard.classList.remove("hidden");
+    logoutCard.classList.remove("hidden");
 
-    const {
-      count: rideCount,
-      error: ridesError
-    } = await db
-      .from("rides")
-      .select(
-        "id",
-        {
-          count: "exact",
-          head: true
-        }
-      );
-
-    if (ridesError) {
-      setResult(
-        "ridesTest",
-        false,
-        "Fahrtenzugriff fehlgeschlagen",
-        ridesError.message
-      );
-      return;
-    }
-
-    setResult(
-      "ridesTest",
+    setTest(
+      "sessionTest",
       true,
-      "Fahrtenzugriff erlaubt",
-      (rideCount ?? 0) +
-      " sichtbare Fahrten."
+      "Angemeldet",
+      currentProfile.display_name +
+      " · " +
+      currentFamily.name
     );
+
+    setTest(
+      "createRidePermission",
+      true,
+      "Fahrtanlage freigegeben",
+      "requester_id wird automatisch dem eingeloggten Nutzer zugeordnet."
+    );
+
+    await loadRides();
+  }
+
+  function renderProfile() {
 
     document.getElementById(
       "profileName"
     ).textContent =
-      profile.display_name;
+      currentProfile.display_name;
 
     document.getElementById(
       "familyName"
     ).textContent =
-      family.name;
+      currentFamily.name;
 
     document.getElementById(
       "canDrive"
     ).textContent =
-      booleanText(profile.can_drive);
+      yesNo(currentProfile.can_drive);
 
     document.getElementById(
       "isAdmin"
     ).textContent =
-      booleanText(profile.is_admin);
-
-    const memberList =
-      document.getElementById(
-        "memberList"
-      );
-
-    memberList.replaceChildren();
-
-    for (
-      const member
-      of members || []
-    ) {
-      const row =
-        document.createElement("div");
-
-      row.className =
-        "member";
-
-      const name =
-        document.createElement("strong");
-
-      name.textContent =
-        member.display_name;
-
-      const role =
-        document.createElement("span");
-
-      role.className =
-        "member-role";
-
-      if (member.can_drive) {
-        role.textContent =
-          member.is_admin
-            ? "Fahrer · Admin"
-            : "Fahrer";
-      } else {
-        role.textContent =
-          "Mitfahrerin";
-      }
-
-      row.appendChild(name);
-      row.appendChild(role);
-
-      memberList.appendChild(row);
-    }
-
-    loginCard.classList.add("hidden");
-    profileCard.classList.remove("hidden");
+      yesNo(currentProfile.is_admin);
   }
 
-  async function runLogoutTest() {
+  function renderDriverOptions() {
 
-    const {
-      error: logoutError
-    } = await db.auth.signOut();
+    const select =
+      document.getElementById("driverId");
 
-    if (logoutError) {
-      setResult(
-        "logoutSessionTest",
-        false,
-        "Logout fehlgeschlagen",
-        logoutError.message
+    select.replaceChildren();
+
+    const openOption =
+      document.createElement("option");
+
+    openOption.value = "";
+    openOption.textContent =
+      "Wer kann mich holen?";
+
+    select.appendChild(openOption);
+
+    const eligibleDrivers =
+      familyMembers.filter(
+        member =>
+          member.can_drive &&
+          member.id !== currentProfile.id
+      );
+
+    for (const driver of eligibleDrivers) {
+      const option =
+        document.createElement("option");
+
+      option.value =
+        driver.id;
+
+      option.textContent =
+        driver.display_name;
+
+      if (driver.display_name === "Aaron") {
+        option.selected = true;
+      }
+
+      select.appendChild(option);
+    }
+  }
+
+  async function createRide(event) {
+
+    event.preventDefault();
+    hideMessage("createRideMessage");
+
+    if (
+      !currentProfile ||
+      !currentFamily
+    ) {
+      setMessage(
+        "createRideMessage",
+        "error",
+        "Profil oder Familie fehlt."
       );
       return;
     }
 
-    authenticatedTests.classList.add("hidden");
+    const driverValue =
+      document
+        .getElementById("driverId")
+        .value;
+
+    if (
+      driverValue &&
+      driverValue === currentProfile.id
+    ) {
+      setMessage(
+        "createRideMessage",
+        "error",
+        "Du kannst dich nicht selbst als Fahrer auswählen."
+      );
+      return;
+    }
+
+    const rideData = {
+      family_id:
+        currentProfile.family_id,
+
+      requester_id:
+        currentProfile.id,
+
+      driver_id:
+        driverValue || null,
+
+      pickup_label:
+        document
+          .getElementById("pickupLabel")
+          .value
+          .trim(),
+
+      pickup_latitude:
+        Number(
+          document
+            .getElementById("pickupLatitude")
+            .value
+        ),
+
+      pickup_longitude:
+        Number(
+          document
+            .getElementById("pickupLongitude")
+            .value
+        ),
+
+      pickup_captured_at:
+        new Date().toISOString(),
+
+      destination_label:
+        document
+          .getElementById("destinationLabel")
+          .value
+          .trim(),
+
+      destination_latitude:
+        Number(
+          document
+            .getElementById("destinationLatitude")
+            .value
+        ),
+
+      destination_longitude:
+        Number(
+          document
+            .getElementById("destinationLongitude")
+            .value
+        ),
+
+      pickup_type:
+        "now",
+
+      requested_pickup_time:
+        new Date().toISOString(),
+
+      passenger_count:
+        Number(
+          document
+            .getElementById("passengerCount")
+            .value
+        ),
+
+      note:
+        document
+          .getElementById("rideNote")
+          .value
+          .trim() || null,
+
+      status:
+        "requested",
+
+      eta_minutes:
+        null,
+
+      route_distance_km:
+        null,
+
+      route_duration_minutes:
+        null
+    };
+
+    createRideButton.disabled = true;
+    createRideButton.textContent =
+      "TESTFAHRT WIRD ANGELEGT …";
+
+    const {
+      data,
+      error
+    } = await db
+      .from("rides")
+      .insert(rideData)
+      .select()
+      .single();
+
+    createRideButton.disabled = false;
+    createRideButton.textContent =
+      "TESTFAHRT ANLEGEN";
+
+    if (error) {
+      setMessage(
+        "createRideMessage",
+        "error",
+        "Fahrt konnte nicht angelegt werden: " +
+        error.message
+      );
+      return;
+    }
+
+    setMessage(
+      "createRideMessage",
+      "success",
+      "Testfahrt angelegt ✓ · ID: " +
+      data.id
+    );
+
+    await loadRides();
+  }
+
+  async function loadRides() {
+
+    const {
+      data,
+      error,
+      count
+    } = await db
+      .from("rides")
+      .select(
+        `
+          id,
+          requester_id,
+          driver_id,
+          pickup_label,
+          destination_label,
+          requested_pickup_time,
+          passenger_count,
+          note,
+          status,
+          eta_minutes,
+          created_at
+        `,
+        {
+          count: "exact"
+        }
+      )
+      .order(
+        "created_at",
+        {
+          ascending: false
+        }
+      );
+
+    if (error) {
+      setTest(
+        "ridesTest",
+        false,
+        "Fahrten konnten nicht geladen werden",
+        error.message
+      );
+      return;
+    }
+
+    setTest(
+      "ridesTest",
+      true,
+      "Fahrten geladen",
+      (count ?? data?.length ?? 0) +
+      " sichtbare Datenbankfahrten."
+    );
+
+    renderRides(data || []);
+  }
+
+  function renderRides(rides) {
+
+    const list =
+      document.getElementById("rideList");
+
+    list.replaceChildren();
+
+    if (!rides.length) {
+      const empty =
+        document.createElement("div");
+
+      empty.className = "test";
+
+      empty.textContent =
+        "Noch keine Datenbankfahrt vorhanden.";
+
+      list.appendChild(empty);
+      return;
+    }
+
+    for (const ride of rides) {
+
+      const card =
+        document.createElement("article");
+
+      card.className = "ride";
+
+      const header =
+        document.createElement("div");
+
+      header.className = "ride-header";
+
+      const headingBlock =
+        document.createElement("div");
+
+      const title =
+        document.createElement("h3");
+
+      title.textContent =
+        profileName(ride.requester_id) +
+        " → " +
+        profileName(ride.driver_id);
+
+      const created =
+        document.createElement("small");
+
+      created.textContent =
+        formatDate(ride.created_at);
+
+      headingBlock.appendChild(title);
+      headingBlock.appendChild(created);
+
+      const status =
+        document.createElement("span");
+
+      status.className = "status";
+      status.textContent =
+        statusLabel(ride.status);
+
+      header.appendChild(headingBlock);
+      header.appendChild(status);
+
+      const route =
+        document.createElement("div");
+
+      route.className = "ride-route";
+      route.textContent =
+        "📍 " +
+        ride.pickup_label +
+        " → 🏁 " +
+        ride.destination_label;
+
+      const meta =
+        document.createElement("div");
+
+      meta.className = "ride-meta";
+
+      const people =
+        document.createElement("span");
+
+      people.textContent =
+        "👥 " +
+        ride.passenger_count;
+
+      const time =
+        document.createElement("span");
+
+      time.textContent =
+        "🕐 " +
+        formatDate(
+          ride.requested_pickup_time
+        );
+
+      const eta =
+        document.createElement("span");
+
+      eta.textContent =
+        ride.eta_minutes
+          ? "ETA " +
+            ride.eta_minutes +
+            " Min."
+          : "ETA offen";
+
+      meta.appendChild(people);
+      meta.appendChild(time);
+      meta.appendChild(eta);
+
+      card.appendChild(header);
+      card.appendChild(route);
+      card.appendChild(meta);
+
+      if (ride.note) {
+        const note =
+          document.createElement("div");
+
+        note.className = "message";
+        note.textContent =
+          "💬 " + ride.note;
+
+        card.appendChild(note);
+      }
+
+      list.appendChild(card);
+    }
+  }
+
+  async function login(event) {
+
+    event.preventDefault();
+    hideMessage("loginMessage");
+
+    const email =
+      document
+        .getElementById("email")
+        .value
+        .trim();
+
+    const password =
+      document
+        .getElementById("password")
+        .value;
+
+    loginButton.disabled = true;
+    loginButton.textContent =
+      "ANMELDUNG LÄUFT …";
+
+    const {
+      data,
+      error
+    } = await db.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    loginButton.disabled = false;
+    loginButton.textContent =
+      "ANMELDEN";
+
+    if (
+      error ||
+      !data.session
+    ) {
+      setMessage(
+        "loginMessage",
+        "error",
+        error?.message ||
+        "Login nicht möglich."
+      );
+      return;
+    }
+
+    document.getElementById(
+      "password"
+    ).value = "";
+
+    await loadAuthenticatedState();
+  }
+
+  async function logout() {
+
+    const {
+      error
+    } = await db.auth.signOut();
+
+    if (error) {
+      alert(
+        "Logout fehlgeschlagen: " +
+        error.message
+      );
+      return;
+    }
+
+    currentUser = null;
+    currentProfile = null;
+    currentFamily = null;
+    familyMembers = [];
+
     profileCard.classList.add("hidden");
-    logoutTests.classList.remove("hidden");
+    createRideCard.classList.add("hidden");
+    ridesCard.classList.add("hidden");
+    logoutCard.classList.add("hidden");
     loginCard.classList.remove("hidden");
-    recoveryCard.classList.add("hidden");
-    loginForm.classList.remove("hidden");
 
     loginForm.reset();
 
-    const {
-      data: sessionData,
-      error: sessionError
-    } = await db.auth.getSession();
-
-    setResult(
-      "logoutSessionTest",
-      !sessionError &&
-      !sessionData.session,
-      !sessionError &&
-      !sessionData.session
-        ? "Session nach Logout entfernt"
-        : "Session nach Logout noch vorhanden",
-      sessionError?.message || ""
-    );
-
-    const {
-      data: profileData,
-      error: profileError
-    } = await db
-      .from("profiles")
-      .select("id");
-
-    setResult(
-      "logoutProfilesTest",
-      Boolean(profileError),
-      profileError
-        ? "Profiles nach Logout blockiert"
-        : "Profiles nach Logout erreichbar",
-      profileError?.message ||
-      (
-        (profileData?.length ?? 0) +
-        " Datensätze zurückgegeben."
-      )
-    );
-
-    const {
-      data: familyData,
-      error: familyError
-    } = await db
-      .from("families")
-      .select("id");
-
-    setResult(
-      "logoutFamiliesTest",
-      Boolean(familyError),
-      familyError
-        ? "Families nach Logout blockiert"
-        : "Families nach Logout erreichbar",
-      familyError?.message ||
-      (
-        (familyData?.length ?? 0) +
-        " Datensätze zurückgegeben."
-      )
-    );
-
-    setResult(
-      "session",
+    setTest(
+      "sessionTest",
       true,
       "Keine Session vorhanden",
-      "Logout- und RLS-Test abgeschlossen."
+      "Erfolgreich abgemeldet."
     );
   }
 
-  /*
-    Client prüfen
-  */
-
   if (!db) {
-    setResult(
-      "client",
+    setTest(
+      "clientTest",
       false,
       "Supabase Client nicht verfügbar",
-      "supabase-config.js und supabase-client.js prüfen."
+      "Konfiguration prüfen."
     );
 
     loginButton.disabled = true;
-    forgotPasswordButton.disabled = true;
     return;
   }
 
-  setResult(
-    "client",
+  setTest(
+    "clientTest",
     true,
     "Supabase Client initialisiert",
     "Project URL und Publishable Key wurden verarbeitet."
   );
 
-  /*
-    Auth-Events früh registrieren, damit PASSWORD_RECOVERY
-    beim Öffnen des E-Mail-Links erkannt wird.
-  */
-
-  db.auth.onAuthStateChange(
-    async function (event) {
-
-      if (event === "PASSWORD_RECOVERY") {
-        showRecoveryForm();
-      }
-
-    }
-  );
-
-  /*
-    Session prüfen
-  */
-
-  testInitialSession();
-
-  /*
-    Login
-  */
-
   loginForm.addEventListener(
     "submit",
-    async function (event) {
-
-      event.preventDefault();
-      clearMessage();
-
-      const email =
-        document
-          .getElementById("email")
-          .value
-          .trim();
-
-      const password =
-        document
-          .getElementById("password")
-          .value;
-
-      if (
-        !email ||
-        !password
-      ) {
-        showMessage(
-          "error",
-          "Bitte E-Mail und Passwort eingeben."
-        );
-        return;
-      }
-
-      loginButton.disabled = true;
-      loginButton.textContent =
-        "ANMELDUNG LÄUFT …";
-
-      const {
-        data,
-        error
-      } = await db.auth.signInWithPassword({
-        email,
-        password
-      });
-
-      loginButton.disabled = false;
-      loginButton.textContent =
-        "ANMELDEN";
-
-      if (
-        error ||
-        !data.session
-      ) {
-        showMessage(
-          "error",
-          error?.message ||
-          "Login nicht möglich."
-        );
-        return;
-      }
-
-      showMessage(
-        "success",
-        "Login erfolgreich."
-      );
-
-      document.getElementById(
-        "password"
-      ).value = "";
-
-      await loadAuthenticatedData();
-    }
+    login
   );
 
-  /*
-    Passwort-Reset anfordern
-  */
-
-  forgotPasswordButton.addEventListener(
-    "click",
-    async function () {
-
-      clearMessage();
-
-      const email =
-        document
-          .getElementById("email")
-          .value
-          .trim();
-
-      if (!email) {
-        showMessage(
-          "error",
-          "Bitte zuerst Deine E-Mail-Adresse eingeben."
-        );
-        return;
-      }
-
-      forgotPasswordButton.disabled =
-        true;
-
-      forgotPasswordButton.textContent =
-        "RESET-MAIL WIRD GESENDET …";
-
-      const redirectTo =
-        window.location.origin +
-        window.location.pathname;
-
-      const {
-        error
-      } = await db.auth.resetPasswordForEmail(
-        email,
-        {
-          redirectTo
-        }
-      );
-
-      forgotPasswordButton.disabled =
-        false;
-
-      forgotPasswordButton.textContent =
-        "Passwort vergessen?";
-
-      if (error) {
-        showMessage(
-          "error",
-          error.message
-        );
-        return;
-      }
-
-      showMessage(
-        "success",
-        "Falls für diese E-Mail ein FamilyLift-Konto besteht, wurde eine Reset-Mail versendet."
-      );
-    }
+  rideForm.addEventListener(
+    "submit",
+    createRide
   );
 
-  /*
-    Neues Passwort speichern
-  */
-
-  saveNewPasswordButton.addEventListener(
-    "click",
-    async function () {
-
-      clearMessage();
-
-      const password =
-        newPassword.value;
-
-      const repeatedPassword =
-        newPasswordRepeat.value;
-
-      if (password.length < 10) {
-        showMessage(
-          "error",
-          "Das neue Passwort muss mindestens 10 Zeichen lang sein."
-        );
-        return;
-      }
-
-      const hasLetter =
-        /[A-Za-zÄÖÜäöüß]/.test(
-          password
-        );
-
-      const hasNumber =
-        /[0-9]/.test(
-          password
-        );
-
-      if (
-        !hasLetter ||
-        !hasNumber
-      ) {
-        showMessage(
-          "error",
-          "Das neue Passwort muss Buchstaben und Zahlen enthalten."
-        );
-        return;
-      }
-
-      if (
-        password !==
-        repeatedPassword
-      ) {
-        showMessage(
-          "error",
-          "Die beiden Passwörter stimmen nicht überein."
-        );
-        return;
-      }
-
-      saveNewPasswordButton.disabled =
-        true;
-
-      saveNewPasswordButton.textContent =
-        "WIRD GESPEICHERT …";
-
-      const {
-        error
-      } = await db.auth.updateUser({
-        password
-      });
-
-      saveNewPasswordButton.disabled =
-        false;
-
-      saveNewPasswordButton.textContent =
-        "NEUES PASSWORT SPEICHERN";
-
-      if (error) {
-        showMessage(
-          "error",
-          error.message
-        );
-        return;
-      }
-
-      await db.auth.signOut();
-
-      recoveryMode = false;
-
-      recoveryCard.classList.add(
-        "hidden"
-      );
-
-      loginForm.classList.remove(
-        "hidden"
-      );
-
-      newPassword.value = "";
-      newPasswordRepeat.value = "";
-
-      showMessage(
-        "success",
-        "Passwort geändert. Du kannst Dich jetzt mit dem neuen Passwort anmelden."
-      );
-
-      setResult(
-        "session",
-        true,
-        "Keine Session vorhanden",
-        "Passwort-Reset abgeschlossen."
-      );
-    }
-  );
-
-  /*
-    Logout
-  */
+  document
+    .getElementById("reloadRidesButton")
+    .addEventListener(
+      "click",
+      loadRides
+    );
 
   document
     .getElementById("logoutButton")
     .addEventListener(
       "click",
-      runLogoutTest
+      logout
     );
+
+  initialize();
 
 })();
 </script>
