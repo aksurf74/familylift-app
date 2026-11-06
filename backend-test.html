@@ -134,7 +134,8 @@
 
     input:focus {
       border-color: var(--cyan);
-      box-shadow: 0 0 0 3px rgba(40, 223, 255, 0.10);
+      box-shadow:
+        0 0 0 3px rgba(40, 223, 255, 0.10);
     }
 
     .field {
@@ -279,10 +280,10 @@
   <h1>FamilyLift Backend Test B2.2</h1>
 
   <p class="intro">
-    Echter Login, Profilabfrage und RLS-Test mit Supabase.
+    Echter Login, Profilabfrage, Passwort-Recovery und RLS-Test.
   </p>
 
-  <section id="connectionCard" class="card">
+  <section class="card">
 
     <h2>Verbindung</h2>
 
@@ -339,7 +340,59 @@
         ANMELDEN
       </button>
 
+      <button
+        id="forgotPasswordButton"
+        class="secondary"
+        type="button"
+      >
+        Passwort vergessen?
+      </button>
+
     </form>
+
+    <div
+      id="recoveryCard"
+      class="hidden"
+    >
+
+      <h2>Neues Passwort festlegen</h2>
+
+      <div class="field">
+        <label for="newPassword">
+          Neues Passwort
+        </label>
+
+        <input
+          id="newPassword"
+          type="password"
+          autocomplete="new-password"
+          minlength="10"
+          placeholder="Mindestens 10 Zeichen"
+        >
+      </div>
+
+      <div class="field">
+        <label for="newPasswordRepeat">
+          Passwort wiederholen
+        </label>
+
+        <input
+          id="newPasswordRepeat"
+          type="password"
+          autocomplete="new-password"
+          minlength="10"
+        >
+      </div>
+
+      <button
+        id="saveNewPasswordButton"
+        class="primary"
+        type="button"
+      >
+        NEUES PASSWORT SPEICHERN
+      </button>
+
+    </div>
 
     <div
       id="loginMessage"
@@ -349,7 +402,10 @@
 
   </section>
 
-  <section id="authenticatedTests" class="card hidden">
+  <section
+    id="authenticatedTests"
+    class="card hidden"
+  >
 
     <h2>Authentifizierter Backend-Test</h2>
 
@@ -379,7 +435,10 @@
 
   </section>
 
-  <section id="profileCard" class="card hidden">
+  <section
+    id="profileCard"
+    class="card hidden"
+  >
 
     <h2>FamilyLift-Profil</h2>
 
@@ -411,7 +470,10 @@
       Familienmitglieder
     </h2>
 
-    <div id="memberList" class="member-list"></div>
+    <div
+      id="memberList"
+      class="member-list"
+    ></div>
 
     <button
       id="logoutButton"
@@ -423,19 +485,31 @@
 
   </section>
 
-  <section id="logoutTests" class="card hidden">
+  <section
+    id="logoutTests"
+    class="card hidden"
+  >
 
     <h2>Logout- und RLS-Test</h2>
 
-    <div id="logoutSessionTest" class="test pending">
+    <div
+      id="logoutSessionTest"
+      class="test pending"
+    >
       Session nach Logout wird geprüft …
     </div>
 
-    <div id="logoutProfilesTest" class="test pending">
+    <div
+      id="logoutProfilesTest"
+      class="test pending"
+    >
       Profiles nach Logout werden geprüft …
     </div>
 
-    <div id="logoutFamiliesTest" class="test pending">
+    <div
+      id="logoutFamiliesTest"
+      class="test pending"
+    >
       Families nach Logout werden geprüft …
     </div>
 
@@ -457,7 +531,8 @@
 <script>
 (function () {
 
-  const db = window.familyLiftSupabase;
+  const db =
+    window.familyLiftSupabase;
 
   const loginCard =
     document.getElementById("loginCard");
@@ -467,6 +542,21 @@
 
   const loginButton =
     document.getElementById("loginButton");
+
+  const forgotPasswordButton =
+    document.getElementById("forgotPasswordButton");
+
+  const recoveryCard =
+    document.getElementById("recoveryCard");
+
+  const newPassword =
+    document.getElementById("newPassword");
+
+  const newPasswordRepeat =
+    document.getElementById("newPasswordRepeat");
+
+  const saveNewPasswordButton =
+    document.getElementById("saveNewPasswordButton");
 
   const loginMessage =
     document.getElementById("loginMessage");
@@ -480,16 +570,20 @@
   const logoutTests =
     document.getElementById("logoutTests");
 
+  let recoveryMode = false;
+
   function setResult(
     id,
     success,
     headline,
     detail = ""
   ) {
-    const el = document.getElementById(id);
+    const el =
+      document.getElementById(id);
 
     el.className =
-      "test " + (success ? "pass" : "fail");
+      "test " +
+      (success ? "pass" : "fail");
 
     el.replaceChildren();
 
@@ -497,7 +591,8 @@
       document.createElement("strong");
 
     strong.textContent =
-      (success ? "✓ " : "✕ ") + headline;
+      (success ? "✓ " : "✕ ") +
+      headline;
 
     el.appendChild(strong);
 
@@ -508,7 +603,8 @@
       const small =
         document.createElement("small");
 
-      small.textContent = detail;
+      small.textContent =
+        detail;
 
       el.appendChild(br);
       el.appendChild(small);
@@ -527,38 +623,70 @@
           : "message-error"
       );
 
-    loginMessage.textContent = text;
+    loginMessage.textContent =
+      text;
   }
 
   function clearMessage() {
     loginMessage.className =
       "message hidden";
 
-    loginMessage.textContent = "";
+    loginMessage.textContent =
+      "";
   }
 
   function booleanText(value) {
     return value ? "Ja" : "Nein";
   }
 
-  async function testAnonymousAccess() {
+  function showRecoveryForm() {
+    recoveryMode = true;
+
+    loginCard.classList.remove("hidden");
+    loginForm.classList.add("hidden");
+    recoveryCard.classList.remove("hidden");
+
+    authenticatedTests.classList.add("hidden");
+    profileCard.classList.add("hidden");
+    logoutTests.classList.add("hidden");
+
+    clearMessage();
+
+    showMessage(
+      "success",
+      "Recovery-Link bestätigt. Bitte jetzt ein neues Passwort festlegen."
+    );
+
+    setResult(
+      "session",
+      true,
+      "Recovery-Session vorhanden",
+      "Neues Passwort kann gespeichert werden."
+    );
+  }
+
+  async function testInitialSession() {
 
     const {
-      data: sessionData,
-      error: sessionError
+      data,
+      error
     } = await db.auth.getSession();
 
-    if (sessionError) {
+    if (error) {
       setResult(
         "session",
         false,
         "Session-Test fehlgeschlagen",
-        sessionError.message
+        error.message
       );
       return;
     }
 
-    if (sessionData.session) {
+    if (recoveryMode) {
+      return;
+    }
+
+    if (data.session) {
       setResult(
         "session",
         true,
@@ -574,7 +702,7 @@
       "session",
       true,
       "Keine Session vorhanden",
-      "Bereit für den Login-Test."
+      "Bereit für Login oder Passwort-Reset."
     );
   }
 
@@ -591,10 +719,6 @@
       "Eine aktive Supabase-Session ist vorhanden."
     );
 
-    /*
-      Auth-Benutzer authentisch vom Auth-Server laden.
-    */
-
     const {
       data: userData,
       error: userError
@@ -608,7 +732,8 @@
         "userTest",
         false,
         "Auth-Benutzer konnte nicht geladen werden",
-        userError?.message || "Kein Benutzer vorhanden."
+        userError?.message ||
+        "Kein Benutzer vorhanden."
       );
       return;
     }
@@ -622,10 +747,6 @@
       "Auth-Benutzer bestätigt",
       user.email || user.id
     );
-
-    /*
-      Eigenes FamilyLift-Profil laden.
-    */
 
     const {
       data: profile,
@@ -659,10 +780,6 @@
       profile.display_name
     );
 
-    /*
-      Zugehörige Familie laden.
-    */
-
     const {
       data: family,
       error: familyError
@@ -693,10 +810,6 @@
       family.name
     );
 
-    /*
-      Alle sichtbaren Family-Profile laden.
-    */
-
     const {
       data: members,
       error: membersError
@@ -723,7 +836,10 @@
 
     const memberNames =
       (members || [])
-        .map(member => member.display_name)
+        .map(
+          member =>
+            member.display_name
+        )
         .join(", ");
 
     setResult(
@@ -736,10 +852,6 @@
       " sichtbar: " +
       memberNames
     );
-
-    /*
-      Fahrtenzugriff prüfen.
-    */
 
     const {
       count: rideCount,
@@ -772,10 +884,6 @@
       " sichtbare Fahrten."
     );
 
-    /*
-      Profilkarte aufbauen.
-    */
-
     document.getElementById(
       "profileName"
     ).textContent =
@@ -797,16 +905,21 @@
       booleanText(profile.is_admin);
 
     const memberList =
-      document.getElementById("memberList");
+      document.getElementById(
+        "memberList"
+      );
 
     memberList.replaceChildren();
 
-    for (const member of members || []) {
-
+    for (
+      const member
+      of members || []
+    ) {
       const row =
         document.createElement("div");
 
-      row.className = "member";
+      row.className =
+        "member";
 
       const name =
         document.createElement("strong");
@@ -817,7 +930,8 @@
       const role =
         document.createElement("span");
 
-      role.className = "member-role";
+      role.className =
+        "member-role";
 
       if (member.can_drive) {
         role.textContent =
@@ -831,6 +945,7 @@
 
       row.appendChild(name);
       row.appendChild(role);
+
       memberList.appendChild(row);
     }
 
@@ -858,6 +973,8 @@
     profileCard.classList.add("hidden");
     logoutTests.classList.remove("hidden");
     loginCard.classList.remove("hidden");
+    recoveryCard.classList.add("hidden");
+    loginForm.classList.remove("hidden");
 
     loginForm.reset();
 
@@ -868,8 +985,10 @@
 
     setResult(
       "logoutSessionTest",
-      !sessionError && !sessionData.session,
-      !sessionError && !sessionData.session
+      !sessionError &&
+      !sessionData.session,
+      !sessionError &&
+      !sessionData.session
         ? "Session nach Logout entfernt"
         : "Session nach Logout noch vorhanden",
       sessionError?.message || ""
@@ -924,7 +1043,7 @@
   }
 
   /*
-    Initialisierung
+    Client prüfen
   */
 
   if (!db) {
@@ -936,6 +1055,7 @@
     );
 
     loginButton.disabled = true;
+    forgotPasswordButton.disabled = true;
     return;
   }
 
@@ -946,7 +1066,26 @@
     "Project URL und Publishable Key wurden verarbeitet."
   );
 
-  testAnonymousAccess();
+  /*
+    Auth-Events früh registrieren, damit PASSWORD_RECOVERY
+    beim Öffnen des E-Mail-Links erkannt wird.
+  */
+
+  db.auth.onAuthStateChange(
+    async function (event) {
+
+      if (event === "PASSWORD_RECOVERY") {
+        showRecoveryForm();
+      }
+
+    }
+  );
+
+  /*
+    Session prüfen
+  */
+
+  testInitialSession();
 
   /*
     Login
@@ -955,6 +1094,7 @@
   loginForm.addEventListener(
     "submit",
     async function (event) {
+
       event.preventDefault();
       clearMessage();
 
@@ -1018,6 +1158,181 @@
       ).value = "";
 
       await loadAuthenticatedData();
+    }
+  );
+
+  /*
+    Passwort-Reset anfordern
+  */
+
+  forgotPasswordButton.addEventListener(
+    "click",
+    async function () {
+
+      clearMessage();
+
+      const email =
+        document
+          .getElementById("email")
+          .value
+          .trim();
+
+      if (!email) {
+        showMessage(
+          "error",
+          "Bitte zuerst Deine E-Mail-Adresse eingeben."
+        );
+        return;
+      }
+
+      forgotPasswordButton.disabled =
+        true;
+
+      forgotPasswordButton.textContent =
+        "RESET-MAIL WIRD GESENDET …";
+
+      const redirectTo =
+        window.location.origin +
+        window.location.pathname;
+
+      const {
+        error
+      } = await db.auth.resetPasswordForEmail(
+        email,
+        {
+          redirectTo
+        }
+      );
+
+      forgotPasswordButton.disabled =
+        false;
+
+      forgotPasswordButton.textContent =
+        "Passwort vergessen?";
+
+      if (error) {
+        showMessage(
+          "error",
+          error.message
+        );
+        return;
+      }
+
+      showMessage(
+        "success",
+        "Falls für diese E-Mail ein FamilyLift-Konto besteht, wurde eine Reset-Mail versendet."
+      );
+    }
+  );
+
+  /*
+    Neues Passwort speichern
+  */
+
+  saveNewPasswordButton.addEventListener(
+    "click",
+    async function () {
+
+      clearMessage();
+
+      const password =
+        newPassword.value;
+
+      const repeatedPassword =
+        newPasswordRepeat.value;
+
+      if (password.length < 10) {
+        showMessage(
+          "error",
+          "Das neue Passwort muss mindestens 10 Zeichen lang sein."
+        );
+        return;
+      }
+
+      const hasLetter =
+        /[A-Za-zÄÖÜäöüß]/.test(
+          password
+        );
+
+      const hasNumber =
+        /[0-9]/.test(
+          password
+        );
+
+      if (
+        !hasLetter ||
+        !hasNumber
+      ) {
+        showMessage(
+          "error",
+          "Das neue Passwort muss Buchstaben und Zahlen enthalten."
+        );
+        return;
+      }
+
+      if (
+        password !==
+        repeatedPassword
+      ) {
+        showMessage(
+          "error",
+          "Die beiden Passwörter stimmen nicht überein."
+        );
+        return;
+      }
+
+      saveNewPasswordButton.disabled =
+        true;
+
+      saveNewPasswordButton.textContent =
+        "WIRD GESPEICHERT …";
+
+      const {
+        error
+      } = await db.auth.updateUser({
+        password
+      });
+
+      saveNewPasswordButton.disabled =
+        false;
+
+      saveNewPasswordButton.textContent =
+        "NEUES PASSWORT SPEICHERN";
+
+      if (error) {
+        showMessage(
+          "error",
+          error.message
+        );
+        return;
+      }
+
+      await db.auth.signOut();
+
+      recoveryMode = false;
+
+      recoveryCard.classList.add(
+        "hidden"
+      );
+
+      loginForm.classList.remove(
+        "hidden"
+      );
+
+      newPassword.value = "";
+      newPasswordRepeat.value = "";
+
+      showMessage(
+        "success",
+        "Passwort geändert. Du kannst Dich jetzt mit dem neuen Passwort anmelden."
+      );
+
+      setResult(
+        "session",
+        true,
+        "Keine Session vorhanden",
+        "Passwort-Reset abgeschlossen."
+      );
     }
   );
 
