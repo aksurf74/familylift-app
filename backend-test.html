@@ -2,1038 +2,205 @@
 <html lang="de">
 <head>
   <meta charset="utf-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1"
-  >
-
-  <title>FamilyLift Backend Test B2.2</title>
-
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>FamilyLift Backend Test B2.5</title>
   <style>
-    :root {
-      --background: #080b12;
-      --panel: #101927;
-      --panel-light: #152235;
-      --text: #f7f9fc;
-      --muted: #9ca8b8;
-      --lime: #caff4d;
-      --cyan: #28dfff;
-      --green: #6fcf97;
-      --red: #ff6578;
-      --orange: #ffb547;
-      --border: #243448;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      padding: 28px;
-      min-height: 100vh;
-      background:
-        radial-gradient(
-          circle at 80% 0,
-          rgba(40, 223, 255, 0.12),
-          transparent 30%
-        ),
-        linear-gradient(
-          160deg,
-          #060a11,
-          var(--background)
-        );
-      color: var(--text);
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Arial,
-        sans-serif;
-    }
-
-    main {
-      max-width: 760px;
-      margin: 0 auto;
-    }
-
-    h1 {
-      margin-top: 0;
-      color: var(--lime);
-      font-size: 32px;
-    }
-
-    h2 {
-      margin-top: 0;
-      font-size: 20px;
-    }
-
-    .intro {
-      margin-bottom: 22px;
-      color: var(--muted);
-    }
-
-    .card {
-      margin: 14px 0;
-      padding: 18px;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      background:
-        linear-gradient(
-          145deg,
-          rgba(24, 40, 59, 0.94),
-          rgba(12, 22, 35, 0.94)
-        );
-      box-shadow:
-        0 18px 45px rgba(0, 0, 0, 0.24),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    }
-
-    .test {
-      margin: 10px 0;
-      padding: 14px;
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      background: var(--panel);
-    }
-
-    .pass {
-      border-color: var(--green);
-    }
-
-    .fail {
-      border-color: var(--red);
-    }
-
-    .pending {
-      border-color: var(--orange);
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 6px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    input {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      outline: none;
-      background: #0b1420;
-      color: var(--text);
-      font: inherit;
-    }
-
-    input:focus {
-      border-color: var(--cyan);
-      box-shadow: 0 0 0 3px rgba(40, 223, 255, 0.10);
-    }
-
-    .field {
-      margin: 14px 0;
-    }
-
-    button {
-      width: 100%;
-      margin-top: 10px;
-      padding: 15px;
-      border: 0;
-      border-radius: 14px;
-      cursor: pointer;
-      font: inherit;
-      font-weight: 900;
-    }
-
-    button:disabled {
-      cursor: wait;
-      opacity: 0.55;
-    }
-
-    .primary {
-      color: #071008;
-      background:
-        linear-gradient(
-          110deg,
-          #dfff72,
-          #b8ff37 55%,
-          #5ff1c1
-        );
-    }
-
-    .secondary {
-      color: var(--text);
-      background: var(--panel-light);
-      border: 1px solid var(--border);
-    }
-
-    .danger {
-      color: #ffdce1;
-      background: rgba(255, 101, 120, 0.13);
-      border: 1px solid rgba(255, 101, 120, 0.35);
-    }
-
-    .message {
-      margin-top: 14px;
-      padding: 13px;
-      border-radius: 13px;
-    }
-
-    .message-error {
-      color: #ffc3cc;
-      background: rgba(255, 101, 120, 0.12);
-      border: 1px solid rgba(255, 101, 120, 0.34);
-    }
-
-    .message-success {
-      color: #dfffe9;
-      background: rgba(111, 207, 151, 0.12);
-      border: 1px solid rgba(111, 207, 151, 0.34);
-    }
-
-    .profile-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 14px;
-    }
-
-    .profile-value {
-      padding: 13px;
-      border-radius: 13px;
-      background: rgba(255, 255, 255, 0.045);
-    }
-
-    .profile-value span {
-      display: block;
-      margin-bottom: 5px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .profile-value strong {
-      font-size: 17px;
-    }
-
-    .member-list {
-      display: grid;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .member {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 12px 13px;
-      border-radius: 13px;
-      background: rgba(255, 255, 255, 0.045);
-    }
-
-    .member small,
-    .test small {
-      color: var(--muted);
-    }
-
-    .member-role {
-      color: var(--cyan);
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    .security-note {
-      margin-top: 18px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.5;
-    }
-
-    @media (max-width: 560px) {
-      body {
-        padding: 18px;
-      }
-
-      h1 {
-        font-size: 27px;
-      }
-
-      .profile-grid {
-        grid-template-columns: 1fr;
-      }
-    }
+    :root{--bg:#080b12;--panel:#101927;--panel2:#152235;--text:#f7f9fc;--muted:#9ca8b8;--lime:#caff4d;--cyan:#28dfff;--green:#6fcf97;--red:#ff6578;--orange:#ffb547;--border:#243448}
+    *{box-sizing:border-box}body{margin:0;padding:28px;min-height:100vh;background:radial-gradient(circle at 80% 0,rgba(40,223,255,.12),transparent 30%),linear-gradient(160deg,#060a11,var(--bg));color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}main{max-width:820px;margin:auto}h1{margin-top:0;color:var(--lime);font-size:32px}h2{margin:0 0 14px;font-size:20px}h3{margin:0 0 8px;font-size:17px}.intro,small,label{color:var(--muted)}.card{margin:14px 0;padding:18px;border:1px solid var(--border);border-radius:18px;background:linear-gradient(145deg,rgba(24,40,59,.94),rgba(12,22,35,.94));box-shadow:0 18px 45px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.05)}.test{margin:10px 0;padding:14px;border:1px solid var(--border);border-radius:13px;background:var(--panel)}.pass{border-color:var(--green)}.fail{border-color:var(--red)}.pending{border-color:var(--orange)}.hidden{display:none!important}.field{margin:14px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}label{display:block;margin-bottom:6px;font-size:13px}input,select,textarea{width:100%;padding:14px;border:1px solid var(--border);border-radius:13px;outline:none;background:#0b1420;color:var(--text);font:inherit}textarea{min-height:76px}input:focus,select:focus,textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(40,223,255,.1)}button{width:100%;margin-top:10px;padding:15px;border:0;border-radius:14px;cursor:pointer;font:inherit;font-weight:900}button:disabled{cursor:wait;opacity:.55}.primary{color:#071008;background:linear-gradient(110deg,#dfff72,#b8ff37 55%,#5ff1c1)}.secondary{color:var(--text);background:var(--panel2);border:1px solid var(--border)}.danger{color:#ffdce1;background:rgba(255,101,120,.13);border:1px solid rgba(255,101,120,.35)}.message{margin-top:14px;padding:13px;border-radius:13px}.message-error{color:#ffc3cc;background:rgba(255,101,120,.12);border:1px solid rgba(255,101,120,.34)}.message-success,.ride-feedback{color:#dfffe9;background:rgba(111,207,151,.1);border:1px solid rgba(111,207,151,.4)}.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.profile-value{padding:13px;border-radius:13px;background:rgba(255,255,255,.045)}.profile-value span{display:block;margin-bottom:5px;color:var(--muted);font-size:12px}.ride-list{display:grid;gap:12px;margin-top:14px}.ride{padding:15px;border:1px solid #2b4058;border-radius:15px;background:rgba(255,255,255,.04)}.ride-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.route{margin:10px 0;line-height:1.5}.ride-meta{display:flex;flex-wrap:wrap;gap:7px}.ride-meta span{padding:6px 9px;border-radius:999px;background:rgba(255,255,255,.06);color:var(--muted);font-size:12px}.status{padding:6px 9px;border-radius:999px;color:#071008;background:var(--lime);font-size:11px;font-weight:900}.eta-action{margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}.eta-title{margin-bottom:10px;color:var(--muted);font-size:13px}.eta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.eta-button{margin:0;padding:12px 6px;color:var(--text);background:var(--panel2);border:1px solid var(--border)}.eta-button.selected{color:#071008;background:var(--lime);border-color:var(--lime)}.eta-custom{margin-top:9px}.ride-feedback{margin-top:10px;padding:11px;border-radius:12px}@media(max-width:560px){body{padding:18px}h1{font-size:27px}.grid,.profile-grid{grid-template-columns:1fr}}
   </style>
 </head>
-
 <body>
-
 <main>
+  <h1>FamilyLift Backend Test B2.5</h1>
+  <p class="intro">Echter Login, erste Datenbankfahrt und sichere direkte Fahrtannahme.</p>
 
-  <h1>FamilyLift Backend Test B2.2</h1>
-
-  <p class="intro">
-    Echter Login, Profilabfrage und RLS-Test mit Supabase.
-  </p>
-
-  <section id="connectionCard" class="card">
-
+  <section class="card">
     <h2>Verbindung</h2>
-
-    <div id="client" class="test pending">
-      Supabase Client wird geprüft …
-    </div>
-
-    <div id="session" class="test pending">
-      Session wird geprüft …
-    </div>
-
+    <div id="clientTest" class="test pending">Supabase Client wird geprüft …</div>
+    <div id="sessionTest" class="test pending">Session wird geprüft …</div>
   </section>
 
   <section id="loginCard" class="card">
-
     <h2>FamilyLift Login</h2>
-
     <form id="loginForm">
-
-      <div class="field">
-        <label for="email">
-          E-Mail
-        </label>
-
-        <input
-          id="email"
-          name="email"
-          type="email"
-          autocomplete="username"
-          required
-        >
-      </div>
-
-      <div class="field">
-        <label for="password">
-          Passwort
-        </label>
-
-        <input
-          id="password"
-          name="password"
-          type="password"
-          autocomplete="current-password"
-          minlength="10"
-          required
-        >
-      </div>
-
-      <button
-        id="loginButton"
-        class="primary"
-        type="submit"
-      >
-        ANMELDEN
-      </button>
-
+      <div class="field"><label for="email">E-Mail</label><input id="email" type="email" autocomplete="username" required></div>
+      <div class="field"><label for="password">Passwort</label><input id="password" type="password" autocomplete="current-password" minlength="10" required></div>
+      <button id="loginButton" class="primary" type="submit">ANMELDEN</button>
     </form>
-
-    <div
-      id="loginMessage"
-      class="message hidden"
-      aria-live="polite"
-    ></div>
-
-  </section>
-
-  <section id="authenticatedTests" class="card hidden">
-
-    <h2>Authentifizierter Backend-Test</h2>
-
-    <div id="loginTest" class="test pending">
-      Login wird geprüft …
-    </div>
-
-    <div id="userTest" class="test pending">
-      Auth-Benutzer wird geprüft …
-    </div>
-
-    <div id="profileTest" class="test pending">
-      FamilyLift-Profil wird geladen …
-    </div>
-
-    <div id="familyTest" class="test pending">
-      Familie wird geladen …
-    </div>
-
-    <div id="membersTest" class="test pending">
-      Familienmitglieder werden geladen …
-    </div>
-
-    <div id="ridesTest" class="test pending">
-      Fahrtenzugriff wird geprüft …
-    </div>
-
+    <div id="loginMessage" class="message hidden" aria-live="polite"></div>
   </section>
 
   <section id="profileCard" class="card hidden">
-
-    <h2>FamilyLift-Profil</h2>
-
+    <h2>Angemeldetes FamilyLift-Profil</h2>
     <div class="profile-grid">
-
-      <div class="profile-value">
-        <span>Name</span>
-        <strong id="profileName">–</strong>
-      </div>
-
-      <div class="profile-value">
-        <span>Familie</span>
-        <strong id="familyName">–</strong>
-      </div>
-
-      <div class="profile-value">
-        <span>Fahrer</span>
-        <strong id="canDrive">–</strong>
-      </div>
-
-      <div class="profile-value">
-        <span>Admin</span>
-        <strong id="isAdmin">–</strong>
-      </div>
-
+      <div class="profile-value"><span>Name</span><strong id="profileName">–</strong></div>
+      <div class="profile-value"><span>Familie</span><strong id="familyName">–</strong></div>
+      <div class="profile-value"><span>Fahrer</span><strong id="canDrive">–</strong></div>
+      <div class="profile-value"><span>Admin</span><strong id="isAdmin">–</strong></div>
     </div>
-
-    <h2 style="margin-top: 22px;">
-      Familienmitglieder
-    </h2>
-
-    <div id="memberList" class="member-list"></div>
-
-    <button
-      id="logoutButton"
-      class="danger"
-      type="button"
-    >
-      ABMELDEN
-    </button>
-
   </section>
 
-  <section id="logoutTests" class="card hidden">
-
-    <h2>Logout- und RLS-Test</h2>
-
-    <div id="logoutSessionTest" class="test pending">
-      Session nach Logout wird geprüft …
-    </div>
-
-    <div id="logoutProfilesTest" class="test pending">
-      Profiles nach Logout werden geprüft …
-    </div>
-
-    <div id="logoutFamiliesTest" class="test pending">
-      Families nach Logout werden geprüft …
-    </div>
-
+  <section id="createRideCard" class="card hidden">
+    <h2>Neue Testfahrt</h2>
+    <div id="createRidePermission" class="test pending">Berechtigung wird geprüft …</div>
+    <form id="rideForm">
+      <div class="field"><label for="pickupLabel">Abholort</label><input id="pickupLabel" value="Neckartenzlingen, 72654" maxlength="160" required></div>
+      <div class="grid">
+        <div class="field"><label for="pickupLatitude">Abholort Latitude</label><input id="pickupLatitude" type="number" step="any" value="48.5898" required></div>
+        <div class="field"><label for="pickupLongitude">Abholort Longitude</label><input id="pickupLongitude" type="number" step="any" value="9.2351" required></div>
+      </div>
+      <div class="field"><label for="destinationLabel">Ziel</label><input id="destinationLabel" value="Zuhause" maxlength="160" required></div>
+      <div class="grid">
+        <div class="field"><label for="destinationLatitude">Ziel Latitude</label><input id="destinationLatitude" type="number" step="any" value="48.5902" required></div>
+        <div class="field"><label for="destinationLongitude">Ziel Longitude</label><input id="destinationLongitude" type="number" step="any" value="9.2348" required></div>
+      </div>
+      <div class="grid">
+        <div class="field"><label for="passengerCount">Personen</label><select id="passengerCount"><option value="1">1 Person</option><option value="2" selected>2 Personen</option><option value="3">3 Personen</option><option value="4">4 Personen</option><option value="5">5 Personen</option></select></div>
+        <div class="field"><label for="driverId">Fahrer</label><select id="driverId"><option value="">Fahrer wird geladen …</option></select></div>
+      </div>
+      <div class="field"><label for="rideNote">Notiz</label><textarea id="rideNote" maxlength="500">B2.4 Testfahrt</textarea></div>
+      <button id="createRideButton" class="primary" type="submit">TESTFAHRT ANLEGEN</button>
+    </form>
+    <div id="createRideMessage" class="message hidden" aria-live="polite"></div>
   </section>
 
-  <p class="security-note">
-    Das Passwort wird ausschließlich direkt an Supabase Auth
-    übermittelt und weder angezeigt noch in dieser Testseite
-    gespeichert oder protokolliert.
-  </p>
+  <section id="ridesCard" class="card hidden">
+    <div class="ride-header"><div><h2>Sichtbare Datenbankfahrten</h2><small>RLS-gefilterte Fahrten für Kraus Family</small></div><button id="reloadRidesButton" class="secondary" type="button" style="width:auto;margin:0">AKTUALISIEREN</button></div>
+    <div id="ridesTest" class="test pending">Fahrten werden geladen …</div>
+    <div id="rideList" class="ride-list"></div>
+  </section>
 
+  <section id="logoutCard" class="card hidden"><button id="logoutButton" class="danger" type="button">ABMELDEN</button></section>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script src="supabase-config.js"></script>
 <script src="supabase-client.js"></script>
-
 <script>
-(function () {
+(function(){
+  const db=window.familyLiftSupabase;
+  let currentUser=null,currentProfile=null,currentFamily=null,familyMembers=[];
+  const $=id=>document.getElementById(id);
+  const loginCard=$('loginCard'),profileCard=$('profileCard'),createRideCard=$('createRideCard'),ridesCard=$('ridesCard'),logoutCard=$('logoutCard');
 
-  const db = window.familyLiftSupabase;
+  function test(id,ok,title,detail=''){const el=$(id);el.className='test '+(ok?'pass':'fail');el.replaceChildren();const b=document.createElement('strong');b.textContent=(ok?'✓ ':'✕ ')+title;el.appendChild(b);if(detail){el.appendChild(document.createElement('br'));const s=document.createElement('small');s.textContent=detail;el.appendChild(s)}}
+  function message(id,type,text){const el=$(id);el.className='message '+(type==='success'?'message-success':'message-error');el.textContent=text}
+  function hideMessage(id){$(id).className='message hidden';$(id).textContent=''}
+  const yesNo=v=>v?'Ja':'Nein';
+  const name=id=>familyMembers.find(m=>m.id===id)?.display_name||'Offen';
+  const labels={requested:'Angefragt',accepted:'Bestätigt',driver_on_the_way:'Unterwegs',driver_arrived:'Da',completed:'Erledigt',cancelled:'Storniert',rejected:'Abgelehnt'};
+  const date=v=>v?new Intl.DateTimeFormat('de-DE',{dateStyle:'short',timeStyle:'short'}).format(new Date(v)):'–';
 
-  const loginCard =
-    document.getElementById("loginCard");
-
-  const loginForm =
-    document.getElementById("loginForm");
-
-  const loginButton =
-    document.getElementById("loginButton");
-
-  const loginMessage =
-    document.getElementById("loginMessage");
-
-  const authenticatedTests =
-    document.getElementById("authenticatedTests");
-
-  const profileCard =
-    document.getElementById("profileCard");
-
-  const logoutTests =
-    document.getElementById("logoutTests");
-
-  function setResult(
-    id,
-    success,
-    headline,
-    detail = ""
-  ) {
-    const el = document.getElementById(id);
-
-    el.className =
-      "test " + (success ? "pass" : "fail");
-
-    el.replaceChildren();
-
-    const strong =
-      document.createElement("strong");
-
-    strong.textContent =
-      (success ? "✓ " : "✕ ") + headline;
-
-    el.appendChild(strong);
-
-    if (detail) {
-      const br =
-        document.createElement("br");
-
-      const small =
-        document.createElement("small");
-
-      small.textContent = detail;
-
-      el.appendChild(br);
-      el.appendChild(small);
-    }
+  async function initialize(){
+    if(!db){test('clientTest',false,'Supabase Client nicht verfügbar','Konfiguration prüfen.');$('loginButton').disabled=true;return}
+    test('clientTest',true,'Supabase Client initialisiert','Backend B2.5 ist erreichbar.');
+    const {data,error}=await db.auth.getSession();
+    if(error){test('sessionTest',false,'Session-Test fehlgeschlagen',error.message);return}
+    if(data.session){test('sessionTest',true,'Bestehende Session gefunden','Profil und Fahrten werden geladen.');await loadAuthenticatedState()}
+    else test('sessionTest',true,'Keine Session vorhanden','Bitte anmelden.');
   }
 
-  function showMessage(
-    type,
-    text
-  ) {
-    loginMessage.className =
-      "message " +
-      (
-        type === "success"
-          ? "message-success"
-          : "message-error"
-      );
-
-    loginMessage.textContent = text;
+  async function loadAuthenticatedState(){
+    const {data:u,error:ue}=await db.auth.getUser();
+    if(ue||!u.user){test('sessionTest',false,'Auth-Benutzer nicht verfügbar',ue?.message||'Kein Benutzer.');return}
+    currentUser=u.user;
+    const {data:p,error:pe}=await db.from('profiles').select('id,family_id,display_name,can_drive,is_admin').eq('id',currentUser.id).single();
+    if(pe||!p){test('sessionTest',false,'FamilyLift-Profil fehlt',pe?.message||'Kein Profil.');return}
+    currentProfile=p;
+    const {data:f,error:fe}=await db.from('families').select('id,name').eq('id',p.family_id).single();
+    if(fe||!f){test('sessionTest',false,'Familie fehlt',fe?.message||'Keine Familie.');return}
+    currentFamily=f;
+    const {data:m,error:me}=await db.from('profiles').select('id,display_name,can_drive,is_admin').eq('family_id',p.family_id).order('display_name');
+    if(me){test('sessionTest',false,'Mitglieder konnten nicht geladen werden',me.message);return}
+    familyMembers=m||[];
+    $('profileName').textContent=p.display_name;$('familyName').textContent=f.name;$('canDrive').textContent=yesNo(p.can_drive);$('isAdmin').textContent=yesNo(p.is_admin);
+    renderDrivers();
+    loginCard.classList.add('hidden');[profileCard,createRideCard,ridesCard,logoutCard].forEach(x=>x.classList.remove('hidden'));
+    test('sessionTest',true,'Angemeldet',p.display_name+' · '+f.name);
+    test('createRidePermission',true,'Fahrtanlage freigegeben','requester_id wird automatisch zugeordnet.');
+    await loadRides();
   }
 
-  function clearMessage() {
-    loginMessage.className =
-      "message hidden";
-
-    loginMessage.textContent = "";
+  function renderDrivers(){
+    const select=$('driverId');select.replaceChildren();
+    const open=new Option('Wer kann mich holen?','');select.appendChild(open);
+    for(const d of familyMembers.filter(m=>m.can_drive&&m.id!==currentProfile.id)){const o=new Option(d.display_name,d.id,d.display_name==='Aaron',d.display_name==='Aaron');select.appendChild(o)}
   }
 
-  function booleanText(value) {
-    return value ? "Ja" : "Nein";
+  async function createRide(e){
+    e.preventDefault();hideMessage('createRideMessage');
+    const driver=$('driverId').value;
+    if(driver===currentProfile.id){message('createRideMessage','error','Du kannst dich nicht selbst als Fahrer auswählen.');return}
+    const payload={family_id:currentProfile.family_id,requester_id:currentProfile.id,driver_id:driver||null,pickup_label:$('pickupLabel').value.trim(),pickup_latitude:Number($('pickupLatitude').value),pickup_longitude:Number($('pickupLongitude').value),pickup_captured_at:new Date().toISOString(),destination_label:$('destinationLabel').value.trim(),destination_latitude:Number($('destinationLatitude').value),destination_longitude:Number($('destinationLongitude').value),pickup_type:'now',requested_pickup_time:new Date().toISOString(),passenger_count:Number($('passengerCount').value),note:$('rideNote').value.trim()||null,status:'requested',eta_minutes:null,route_distance_km:null,route_duration_minutes:null};
+    const btn=$('createRideButton');btn.disabled=true;btn.textContent='TESTFAHRT WIRD ANGELEGT …';
+    const {data,error}=await db.from('rides').insert(payload).select().single();
+    btn.disabled=false;btn.textContent='TESTFAHRT ANLEGEN';
+    if(error){message('createRideMessage','error','Fahrt konnte nicht angelegt werden: '+error.message);return}
+    message('createRideMessage','success','Testfahrt angelegt ✓ · ID: '+data.id);await loadRides();
   }
 
-  async function testAnonymousAccess() {
-
-    const {
-      data: sessionData,
-      error: sessionError
-    } = await db.auth.getSession();
-
-    if (sessionError) {
-      setResult(
-        "session",
-        false,
-        "Session-Test fehlgeschlagen",
-        sessionError.message
-      );
-      return;
-    }
-
-    if (sessionData.session) {
-      setResult(
-        "session",
-        true,
-        "Bestehende Session gefunden",
-        "Der eingeloggte Benutzer wird geladen."
-      );
-
-      await loadAuthenticatedData();
-      return;
-    }
-
-    setResult(
-      "session",
-      true,
-      "Keine Session vorhanden",
-      "Bereit für den Login-Test."
-    );
+  async function loadRides(){
+    const {data,error,count}=await db.from('rides').select('id,requester_id,driver_id,pickup_label,destination_label,requested_pickup_time,passenger_count,note,status,eta_minutes,created_at',{count:'exact'}).order('created_at',{ascending:false});
+    if(error){test('ridesTest',false,'Fahrten konnten nicht geladen werden',error.message);return}
+    test('ridesTest',true,'Fahrten geladen',(count??data?.length??0)+' sichtbare Datenbankfahrten.');renderRides(data||[]);
   }
 
-  async function loadAuthenticatedData() {
+  function renderRides(rides){
+    const list=$('rideList');list.replaceChildren();
+    if(!rides.length){const e=document.createElement('div');e.className='test';e.textContent='Noch keine Datenbankfahrt vorhanden.';list.appendChild(e);return}
+    for(const ride of rides){
+      const card=document.createElement('article');card.className='ride';
+      const head=document.createElement('div');head.className='ride-header';
+      const hb=document.createElement('div');const h=document.createElement('h3');h.textContent=name(ride.requester_id)+' → '+name(ride.driver_id);const created=document.createElement('small');created.textContent=date(ride.created_at);hb.append(h,created);
+      const st=document.createElement('span');st.className='status';st.textContent=labels[ride.status]||ride.status;head.append(hb,st);
+      const route=document.createElement('div');route.className='route';route.textContent='📍 '+ride.pickup_label+' → 🏁 '+ride.destination_label;
+      const meta=document.createElement('div');meta.className='ride-meta';
+      for(const text of ['👥 '+ride.passenger_count,'🕐 '+date(ride.requested_pickup_time),ride.eta_minutes?'ETA '+ride.eta_minutes+' Min.':'ETA offen']){const x=document.createElement('span');x.textContent=text;meta.appendChild(x)}
+      card.append(head,route,meta);
+      if(ride.note){const n=document.createElement('div');n.className='message';n.textContent='💬 '+ride.note;card.appendChild(n)}
 
-    authenticatedTests.classList.remove("hidden");
-    profileCard.classList.add("hidden");
-    logoutTests.classList.add("hidden");
-
-    setResult(
-      "loginTest",
-      true,
-      "Login erfolgreich",
-      "Eine aktive Supabase-Session ist vorhanden."
-    );
-
-    /*
-      Auth-Benutzer authentisch vom Auth-Server laden.
-    */
-
-    const {
-      data: userData,
-      error: userError
-    } = await db.auth.getUser();
-
-    if (
-      userError ||
-      !userData.user
-    ) {
-      setResult(
-        "userTest",
-        false,
-        "Auth-Benutzer konnte nicht geladen werden",
-        userError?.message || "Kein Benutzer vorhanden."
-      );
-      return;
-    }
-
-    const user =
-      userData.user;
-
-    setResult(
-      "userTest",
-      true,
-      "Auth-Benutzer bestätigt",
-      user.email || user.id
-    );
-
-    /*
-      Eigenes FamilyLift-Profil laden.
-    */
-
-    const {
-      data: profile,
-      error: profileError
-    } = await db
-      .from("profiles")
-      .select(
-        "id, family_id, display_name, can_drive, is_admin"
-      )
-      .eq("id", user.id)
-      .single();
-
-    if (
-      profileError ||
-      !profile
-    ) {
-      setResult(
-        "profileTest",
-        false,
-        "FamilyLift-Profil konnte nicht geladen werden",
-        profileError?.message ||
-        "Kein Profil gefunden."
-      );
-      return;
-    }
-
-    setResult(
-      "profileTest",
-      true,
-      "FamilyLift-Profil geladen",
-      profile.display_name
-    );
-
-    /*
-      Zugehörige Familie laden.
-    */
-
-    const {
-      data: family,
-      error: familyError
-    } = await db
-      .from("families")
-      .select("id, name")
-      .eq("id", profile.family_id)
-      .single();
-
-    if (
-      familyError ||
-      !family
-    ) {
-      setResult(
-        "familyTest",
-        false,
-        "Familie konnte nicht geladen werden",
-        familyError?.message ||
-        "Keine Familie gefunden."
-      );
-      return;
-    }
-
-    setResult(
-      "familyTest",
-      true,
-      "Kraus Family geladen",
-      family.name
-    );
-
-    /*
-      Alle sichtbaren Family-Profile laden.
-    */
-
-    const {
-      data: members,
-      error: membersError
-    } = await db
-      .from("profiles")
-      .select(
-        "id, display_name, can_drive, is_admin"
-      )
-      .eq("family_id", profile.family_id)
-      .order("display_name");
-
-    if (membersError) {
-      setResult(
-        "membersTest",
-        false,
-        "Familienmitglieder konnten nicht geladen werden",
-        membersError.message
-      );
-      return;
-    }
-
-    const memberCount =
-      members?.length ?? 0;
-
-    const memberNames =
-      (members || [])
-        .map(member => member.display_name)
-        .join(", ");
-
-    setResult(
-      "membersTest",
-      memberCount === 4,
-      memberCount === 4
-        ? "Vier Familienmitglieder sichtbar"
-        : "Unerwartete Anzahl Familienmitglieder",
-      memberCount +
-      " sichtbar: " +
-      memberNames
-    );
-
-    /*
-      Fahrtenzugriff prüfen.
-    */
-
-    const {
-      count: rideCount,
-      error: ridesError
-    } = await db
-      .from("rides")
-      .select(
-        "id",
-        {
-          count: "exact",
-          head: true
-        }
-      );
-
-    if (ridesError) {
-      setResult(
-        "ridesTest",
-        false,
-        "Fahrtenzugriff fehlgeschlagen",
-        ridesError.message
-      );
-      return;
-    }
-
-    setResult(
-      "ridesTest",
-      true,
-      "Fahrtenzugriff erlaubt",
-      (rideCount ?? 0) +
-      " sichtbare Fahrten."
-    );
-
-    /*
-      Profilkarte aufbauen.
-    */
-
-    document.getElementById(
-      "profileName"
-    ).textContent =
-      profile.display_name;
-
-    document.getElementById(
-      "familyName"
-    ).textContent =
-      family.name;
-
-    document.getElementById(
-      "canDrive"
-    ).textContent =
-      booleanText(profile.can_drive);
-
-    document.getElementById(
-      "isAdmin"
-    ).textContent =
-      booleanText(profile.is_admin);
-
-    const memberList =
-      document.getElementById("memberList");
-
-    memberList.replaceChildren();
-
-    for (const member of members || []) {
-
-      const row =
-        document.createElement("div");
-
-      row.className = "member";
-
-      const name =
-        document.createElement("strong");
-
-      name.textContent =
-        member.display_name;
-
-      const role =
-        document.createElement("span");
-
-      role.className = "member-role";
-
-      if (member.can_drive) {
-        role.textContent =
-          member.is_admin
-            ? "Fahrer · Admin"
-            : "Fahrer";
-      } else {
-        role.textContent =
-          "Mitfahrerin";
+      const mayAccept=currentProfile?.can_drive===true&&ride.status==='requested'&&ride.driver_id===currentProfile.id;
+      if(mayAccept){
+        const action=document.createElement('div');action.className='eta-action';
+        const title=document.createElement('div');title.className='eta-title';title.textContent='ETA · voraussichtliche Ankunft in Minuten';action.appendChild(title);
+        const grid=document.createElement('div');grid.className='eta-grid';let selected=null;
+        const custom=document.createElement('input');custom.type='number';custom.inputMode='numeric';custom.min='1';custom.max='180';custom.placeholder='Minuten, 1 bis 180';custom.className='eta-custom hidden';
+        function selectButton(button,value){selected=value;grid.querySelectorAll('.eta-button').forEach(b=>b.classList.remove('selected'));button.classList.add('selected');custom.classList.toggle('hidden',value!=='custom');if(value==='custom')custom.focus()}
+        for(const value of [5,10,15,20,30,40,50,60]){const b=document.createElement('button');b.type='button';b.className='eta-button';b.textContent=value;b.onclick=()=>selectButton(b,value);grid.appendChild(b)}
+        const other=document.createElement('button');other.type='button';other.className='eta-button';other.textContent='Andere';other.onclick=()=>selectButton(other,'custom');grid.appendChild(other);action.append(grid,custom);
+        const accept=document.createElement('button');accept.type='button';accept.className='primary';accept.textContent='ANNEHMEN';action.appendChild(accept);
+        const feedback=document.createElement('div');feedback.className='ride-feedback hidden';action.appendChild(feedback);
+        accept.onclick=async()=>{
+          const eta=selected==='custom'?Number(custom.value):Number(selected);
+          if(!Number.isInteger(eta)||eta<1||eta>180){alert('Bitte eine ETA zwischen 1 und 180 Minuten auswählen.');return}
+          accept.disabled=true;accept.textContent='WIRD ANGENOMMEN …';
+          const {error}=await db.rpc('accept_direct_ride',{p_ride_id:ride.id,p_eta_minutes:eta});
+          if(error){accept.disabled=false;accept.textContent='ANNEHMEN';feedback.className='message message-error';feedback.textContent='Fahrt konnte nicht angenommen werden: '+error.message;return}
+          feedback.className='ride-feedback';feedback.textContent='✓ Fahrt angenommen · ETA '+eta+' Min.';await loadRides();
+        };
+        card.appendChild(action);
       }
-
-      row.appendChild(name);
-      row.appendChild(role);
-      memberList.appendChild(row);
+      list.appendChild(card);
     }
-
-    loginCard.classList.add("hidden");
-    profileCard.classList.remove("hidden");
   }
 
-  async function runLogoutTest() {
-
-    const {
-      error: logoutError
-    } = await db.auth.signOut();
-
-    if (logoutError) {
-      setResult(
-        "logoutSessionTest",
-        false,
-        "Logout fehlgeschlagen",
-        logoutError.message
-      );
-      return;
-    }
-
-    authenticatedTests.classList.add("hidden");
-    profileCard.classList.add("hidden");
-    logoutTests.classList.remove("hidden");
-    loginCard.classList.remove("hidden");
-
-    loginForm.reset();
-
-    const {
-      data: sessionData,
-      error: sessionError
-    } = await db.auth.getSession();
-
-    setResult(
-      "logoutSessionTest",
-      !sessionError && !sessionData.session,
-      !sessionError && !sessionData.session
-        ? "Session nach Logout entfernt"
-        : "Session nach Logout noch vorhanden",
-      sessionError?.message || ""
-    );
-
-    const {
-      data: profileData,
-      error: profileError
-    } = await db
-      .from("profiles")
-      .select("id");
-
-    setResult(
-      "logoutProfilesTest",
-      Boolean(profileError),
-      profileError
-        ? "Profiles nach Logout blockiert"
-        : "Profiles nach Logout erreichbar",
-      profileError?.message ||
-      (
-        (profileData?.length ?? 0) +
-        " Datensätze zurückgegeben."
-      )
-    );
-
-    const {
-      data: familyData,
-      error: familyError
-    } = await db
-      .from("families")
-      .select("id");
-
-    setResult(
-      "logoutFamiliesTest",
-      Boolean(familyError),
-      familyError
-        ? "Families nach Logout blockiert"
-        : "Families nach Logout erreichbar",
-      familyError?.message ||
-      (
-        (familyData?.length ?? 0) +
-        " Datensätze zurückgegeben."
-      )
-    );
-
-    setResult(
-      "session",
-      true,
-      "Keine Session vorhanden",
-      "Logout- und RLS-Test abgeschlossen."
-    );
+  async function login(e){
+    e.preventDefault();hideMessage('loginMessage');const btn=$('loginButton');btn.disabled=true;btn.textContent='ANMELDUNG LÄUFT …';
+    const {data,error}=await db.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});
+    btn.disabled=false;btn.textContent='ANMELDEN';
+    if(error||!data.session){message('loginMessage','error',error?.message||'Login nicht möglich.');return}
+    $('password').value='';await loadAuthenticatedState();
   }
 
-  /*
-    Initialisierung
-  */
-
-  if (!db) {
-    setResult(
-      "client",
-      false,
-      "Supabase Client nicht verfügbar",
-      "supabase-config.js und supabase-client.js prüfen."
-    );
-
-    loginButton.disabled = true;
-    return;
+  async function logout(){
+    const {error}=await db.auth.signOut();if(error){alert('Logout fehlgeschlagen: '+error.message);return}
+    currentUser=currentProfile=currentFamily=null;familyMembers=[];[profileCard,createRideCard,ridesCard,logoutCard].forEach(x=>x.classList.add('hidden'));loginCard.classList.remove('hidden');$('loginForm').reset();test('sessionTest',true,'Keine Session vorhanden','Erfolgreich abgemeldet.');
   }
 
-  setResult(
-    "client",
-    true,
-    "Supabase Client initialisiert",
-    "Project URL und Publishable Key wurden verarbeitet."
-  );
-
-  testAnonymousAccess();
-
-  /*
-    Login
-  */
-
-  loginForm.addEventListener(
-    "submit",
-    async function (event) {
-      event.preventDefault();
-      clearMessage();
-
-      const email =
-        document
-          .getElementById("email")
-          .value
-          .trim();
-
-      const password =
-        document
-          .getElementById("password")
-          .value;
-
-      if (
-        !email ||
-        !password
-      ) {
-        showMessage(
-          "error",
-          "Bitte E-Mail und Passwort eingeben."
-        );
-        return;
-      }
-
-      loginButton.disabled = true;
-      loginButton.textContent =
-        "ANMELDUNG LÄUFT …";
-
-      const {
-        data,
-        error
-      } = await db.auth.signInWithPassword({
-        email,
-        password
-      });
-
-      loginButton.disabled = false;
-      loginButton.textContent =
-        "ANMELDEN";
-
-      if (
-        error ||
-        !data.session
-      ) {
-        showMessage(
-          "error",
-          error?.message ||
-          "Login nicht möglich."
-        );
-        return;
-      }
-
-      showMessage(
-        "success",
-        "Login erfolgreich."
-      );
-
-      document.getElementById(
-        "password"
-      ).value = "";
-
-      await loadAuthenticatedData();
-    }
-  );
-
-  /*
-    Logout
-  */
-
-  document
-    .getElementById("logoutButton")
-    .addEventListener(
-      "click",
-      runLogoutTest
-    );
-
+  if(!db){test('clientTest',false,'Supabase Client nicht verfügbar','Konfiguration prüfen.');$('loginButton').disabled=true;return}
+  test('clientTest',true,'Supabase Client initialisiert','Project URL und Publishable Key wurden verarbeitet.');
+  $('loginForm').addEventListener('submit',login);$('rideForm').addEventListener('submit',createRide);$('reloadRidesButton').addEventListener('click',loadRides);$('logoutButton').addEventListener('click',logout);initialize();
 })();
 </script>
-
 </body>
 </html>
