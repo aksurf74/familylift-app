@@ -10,4 +10,4 @@ body{background:#030914 url('assets/familylift-road-v3.webp') center top/cover f
 
 /* FamilyLift 1.0 RC1.1 */
 .eta-grid-four{grid-template-columns:repeat(2,1fr)}
-.pickup-note{margin:2px 0 0!important;color:var(--muted);font-size:13px;line-height:1.35}
+
