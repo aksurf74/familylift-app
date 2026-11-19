@@ -10,12 +10,18 @@
   async function offer(rideId,profileId,eta,offerId){const row={ride_id:rideId,driver_id:profileId,offer_type:'eta',eta_minutes:eta,proposed_pickup_time:null};const q=offerId?db().from('ride_offers').update(row).eq('id',offerId):db().from('ride_offers').insert(row);const{data,error}=await q.select().single();if(error)throw error;return data}
   const rpc=(name,args)=>db().rpc(name,args).then(({data,error})=>{if(error)throw error;return data});
   function subscribeToFamilyChanges(familyId,onChange,onStatus){
-    let timer=null;const notify=()=>{clearTimeout(timer);timer=setTimeout(()=>onChange?.(),300)};
-    const channel=db().channel(`familylift-${familyId}-${Math.random().toString(36).slice(2)}`)
-      .on('postgres_changes',{event:'*',schema:'public',table:'rides',filter:`family_id=eq.${familyId}`},notify)
-      .on('postgres_changes',{event:'*',schema:'public',table:'ride_offers'},notify)
-      .subscribe(status=>onStatus?.(status));
-    return()=>{clearTimeout(timer);db().removeChannel(channel)};
+    let timer=null,stopped=false,channel=null,retryTimer=null;
+    const notify=()=>{clearTimeout(timer);timer=setTimeout(()=>{if(!stopped)onChange?.()},300)};
+    const start=()=>{
+      if(stopped)return;
+      if(channel)db().removeChannel(channel);
+      channel=db().channel(`familylift-${familyId}-${Date.now()}-${Math.random().toString(36).slice(2)}`)
+        .on('postgres_changes',{event:'*',schema:'public',table:'rides',filter:`family_id=eq.${familyId}`},notify)
+        .on('postgres_changes',{event:'*',schema:'public',table:'ride_offers'},notify)
+        .subscribe(status=>{onStatus?.(status);if((status==='CHANNEL_ERROR'||status==='TIMED_OUT'||status==='CLOSED')&&!stopped){clearTimeout(retryTimer);retryTimer=setTimeout(start,1500)}});
+    };
+    start();
+    return()=>{stopped=true;clearTimeout(timer);clearTimeout(retryTimer);if(channel)db().removeChannel(channel)};
   }
   window.FamilyLiftData={getSession:()=>db().auth.getSession(),signIn:(email,password)=>db().auth.signInWithPassword({email,password}),signOut:()=>db().auth.signOut(),getCurrentProfile:currentProfile,getFamilyMembers:members,getRides:rides,createRide,createRideOffer:(r,p,e)=>offer(r,p,e),updateRideOffer:(id,r,p,e)=>offer(r,p,e,id),selectRideOffer:(r,o)=>rpc('select_ride_offer',{p_ride_id:r,p_offer_id:o}),acceptDirectRide:(r,e)=>rpc('accept_direct_ride',{p_ride_id:r,p_eta_minutes:e}),driverOnTheWay:r=>rpc('driver_on_the_way',{p_ride_id:r}),driverArrived:r=>rpc('driver_arrived',{p_ride_id:r}),completeRide:r=>rpc('complete_ride',{p_ride_id:r}),cancelRide:r=>rpc('cancel_ride',{p_ride_id:r}),subscribeToFamilyChanges};
 })();
