@@ -135,6 +135,7 @@
     let actions = '';
 
     if (ride.status === 'requested' && (isDriver || canOffer)) {
+      if (ownOffer && etaChoice === null) etaChoice = Number(ownOffer.etaMinutes);
       actions = `
         ${ownOffer ? `
           <div class="offer-confirmation">
@@ -205,6 +206,12 @@
     }
 
     const canCancel = isRequester && ['requested', 'accepted', 'driver_on_the_way'].includes(ride.status);
+    const canNavigateToPickup = !isRequester && (isDriver || canOffer) && ['requested', 'accepted', 'driver_on_the_way'].includes(ride.status);
+    const pickupHasCoordinates = Number.isFinite(Number(ride.pickupLatitude)) && Number.isFinite(Number(ride.pickupLongitude));
+    const pickupMapsUrl = pickupHasCoordinates
+      ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${ride.pickupLatitude},${ride.pickupLongitude}`)}&travelmode=driving`
+      : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ride.pickupLabel)}`;
+    const pickupNavigationLabel = pickupHasCoordinates ? '📍 ZUR ABHOLUNG NAVIGIEREN' : '📍 ABHOLORT IN MAPS ÖFFNEN';
 
     return `
       <section class="glass ride-status-card status-${ride.status}">
@@ -222,6 +229,7 @@
           <p>👥 ${ride.passengerCount}</p>
           ${ride.note ? `<p class="note">💬 ${esc(ride.note)}</p>` : ''}
         </div>
+        ${canNavigateToPickup ? `<a class="mapbutton alt pickup-nav" href="${pickupMapsUrl}" target="_blank" rel="noopener">${pickupNavigationLabel}</a>` : ''}
         ${proposals}
         ${actions}
         ${canCancel ? '<button type="button" id="cancel" class="text-btn danger">Stornieren</button>' : ''}
