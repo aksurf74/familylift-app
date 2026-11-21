@@ -3,3 +3,9 @@
 .stats-compact{margin-bottom:6px;padding:14px 16px}.driveback-hero{min-height:285px;margin-top:8px;padding:18px}.driveback-hero h2{margin:8px 0 4px}@media(max-width:390px){.driveback-hero{min-height:270px}.stats-compact .stat{padding:10px 8px}}
 /* FamilyLift 1.1 handover */
 .arrived-card{text-align:center;padding:24px 20px}.arrived-icon{font-size:46px;line-height:1;margin:4px 0 12px}.arrived-card h1{margin-top:8px}.arrived-goodride{font-size:20px;font-weight:850;color:var(--lime);margin:8px 0 20px}.journey-destination{display:flex;flex-direction:column;gap:5px;text-align:left;background:rgba(255,255,255,.055);border:1px solid var(--line);border-radius:16px;padding:14px;margin:12px 0}.journey-destination span{font-size:12px;color:var(--muted)}.journey-destination b{font-size:19px}.route-primary{display:block;text-decoration:none;text-align:center}.completed-card{text-align:center}
+
+/* FamilyLift 1.1 pickup navigation */
+.pickup-nav-action{display:flex;align-items:center;gap:12px;width:100%;margin:14px 0 4px;padding:13px 15px;border:1px solid rgba(39,215,255,.32);border-radius:16px;background:rgba(20,35,51,.82);color:var(--text);text-decoration:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+.pickup-nav-icon{display:grid;place-items:center;width:38px;height:38px;flex:0 0 38px;border-radius:12px;background:rgba(39,215,255,.12);color:var(--cyan);font-size:22px;font-weight:900}
+.pickup-nav-copy{display:flex;flex-direction:column;align-items:flex-start;line-height:1.1}.pickup-nav-copy small{color:var(--muted);font-size:10px;font-weight:750;letter-spacing:.08em;text-transform:uppercase}.pickup-nav-copy b{margin-top:4px;color:var(--cyan);font-size:16px}
+.pickup-nav-action+.primary{margin-top:9px}

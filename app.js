@@ -165,7 +165,17 @@
     }
 
     if (isDriver && ride.status === 'driver_on_the_way') {
-      actions = '<button type="button" id="advance" class="primary" data-action="arrived">BIN DA</button>';
+      const pickupHasCoordinates = Number.isFinite(Number(ride.pickupLatitude)) && Number.isFinite(Number(ride.pickupLongitude));
+      const pickupMapsUrl = pickupHasCoordinates
+        ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${ride.pickupLatitude},${ride.pickupLongitude}`)}&travelmode=driving`
+        : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ride.pickupLabel)}`;
+      const pickupNavigationLabel = pickupHasCoordinates ? 'Zur Abholung' : 'Abholort in Maps';
+      actions = `
+        <a class="pickup-nav-action" href="${pickupMapsUrl}" target="_blank" rel="noopener">
+          <span class="pickup-nav-icon">↗</span>
+          <span class="pickup-nav-copy"><small>Navigation</small><b>${pickupNavigationLabel}</b></span>
+        </a>
+        <button type="button" id="advance" class="primary" data-action="arrived">BIN DA</button>`;
     }
 
     const proposals = isRequester && ride.proposals?.length
@@ -206,14 +216,7 @@
     }
 
     const canCancel = isRequester && ['requested', 'accepted', 'driver_on_the_way'].includes(ride.status);
-    const canNavigateToPickup = !isRequester && (isDriver || canOffer) && ['requested', 'accepted', 'driver_on_the_way'].includes(ride.status);
-    const pickupHasCoordinates = Number.isFinite(Number(ride.pickupLatitude)) && Number.isFinite(Number(ride.pickupLongitude));
-    const pickupMapsUrl = pickupHasCoordinates
-      ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${ride.pickupLatitude},${ride.pickupLongitude}`)}&travelmode=driving`
-      : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ride.pickupLabel)}`;
-    const pickupNavigationLabel = pickupHasCoordinates ? '📍 ZUR ABHOLUNG NAVIGIEREN' : '📍 ABHOLORT IN MAPS ÖFFNEN';
-
-    return `
+return `
       <section class="glass ride-status-card status-${ride.status}">
         <div class="ride-head">
           <div>
@@ -229,8 +232,7 @@
           <p>👥 ${ride.passengerCount}</p>
           ${ride.note ? `<p class="note">💬 ${esc(ride.note)}</p>` : ''}
         </div>
-        ${canNavigateToPickup ? `<a class="mapbutton alt pickup-nav" href="${pickupMapsUrl}" target="_blank" rel="noopener">${pickupNavigationLabel}</a>` : ''}
-        ${proposals}
+${proposals}
         ${actions}
         ${canCancel ? '<button type="button" id="cancel" class="text-btn danger">Stornieren</button>' : ''}
       </section>`;
