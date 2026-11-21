@@ -132,6 +132,11 @@
         </section>`;
     }
 
+    const routeCheckHasCoordinates = Number.isFinite(Number(ride.pickupLatitude)) && Number.isFinite(Number(ride.pickupLongitude));
+    const routeCheckUrl = routeCheckHasCoordinates
+      ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${ride.pickupLatitude},${ride.pickupLongitude}`)}&travelmode=driving`
+      : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ride.pickupLabel)}`;
+
     let actions = '';
 
     if (ride.status === 'requested' && (isDriver || canOffer)) {
@@ -142,6 +147,7 @@
             <b class="lime-check">✓ Angebot gesendet</b>
             <span>Bin da in ca. ${ownOffer.etaMinutes} Min.</span>
           </div>` : ''}
+        <a class="route-check-action" href="${routeCheckUrl}" target="_blank" rel="noopener"><span class="route-check-icon">↗</span><span>ROUTE &amp; FAHRZEIT PRÜFEN</span></a>
         <div class="field eta-field">
           <label>Wann bist du ungefähr da?</label>
           <div class="eta-grid eta-grid-four">
